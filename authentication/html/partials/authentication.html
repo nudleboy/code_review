@@ -1,0 +1,75 @@
+<ng-include src="includes.header"> </ng-include>
+
+<form ng-submit="authenticate(session)" name="loginForm">
+    <div class="mobile-grid-100 grid-parent">
+        <div class="mobile-grid-100 tablet-grid-60 tablet-suffix-20 tablet-prefix-20 grid-40 prefix-30 suffix-30">
+            <div class="mobile-grid-100 grid-parent">
+                <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+                    <h1 class="center grey">Login to your <span class="primary">ZENTRY</span> Account</h1>
+                </div>
+            </div>
+            <div class="mobile-hide tablet-grid-40 grid-40 grid-parent top-mar20 border-right">
+                <div class="mobile-grid-100 tablet-grid-100 grid-100">
+                    <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+                        <h3 class="grid-100 top-mar0"><span class="primary">Scan</span> Here</h3>
+<!--                         <p class="grid-100">LOGIN WITH OUR ZENTRY APP</p>
+                        <ul class="grid-100 grid-parent" id="downloads">
+                            <li class="grid-50"><div id="dl_ios_logo"></div></li>
+                            <li class="grid-50"><div id="dl_android_logo"></div></li>
+                        </ul> -->
+                    </div>
+                    <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+                        <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 grid-90 prefix-5 suffix-5 border">
+                            <div id="qrImage" ng-bind-html="qrImage" class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent top-pad10 bottom-pad10 qrImage"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="mobile-grid-100 tablet-grid-60 grid-60 top-mar20">    
+                <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent top-pad20 info">
+                    <div class="mobile-grid-100 tablet-grid-100 grid-100 info">
+                        <div id="messageDiv" class="result-error-value mobile-grid-95 mobile-suffix-5 tablet-grid-95 tablet-suffix-5 grid-85 prefix-5 suffix-10 messages">
+                            <p id="errorMessage" ng-bind="messages" ng-show="messages" class="error"></p>
+                            <p id="infoMessage" ng-show="info" class="info">D'oh! Did you forget which email you used before? No worries, try another one or try entering a phone number. I'll be right here.</p>
+                        </div>
+                        <input type="text" id="principalText" required name="principal" ng-model="session.principal" class="mobile-grid-100 tablet-grid-100 grid-100 form-control" />
+                        <label for="principal" translate>Email or Phone</label>
+                    </div>
+                </div>
+                <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent top-pad20" ng-show="{{!pinPass || pinPass == 0}}">
+                    <div class="mobile-grid-100 tablet-grid-100 grid-100 info">
+                        <div id="passwordHideButton" class="icon primary small" ng-click="hideShowPassword()" ng-show="inputType == 'text'" ng-hide="inputType == 'password'">HIDE</div>
+                        <div id="passwordShowButton" class="icon primary small" ng-click="hideShowPassword()" ng-show="inputType == 'password'" ng-hide="inputType == 'text'">SHOW</div>
+                        <input type="{{inputType}}" id="secretPassword" name="secretPass" ng-model="session.secret" class="mobile-grid-100 tablet-grid-100 grid-100 form-control" ng-required="{{!pinPass || pinPass == 0}}" autocomplete="off" />
+                        <label for="secretPass" translate>Password</label>
+                    </div>
+                </div>
+                <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent top-pad20" ng-show="pinPass == 1">
+                    <div class="mobile-grid-100 tablet-grid-100 grid-100 info">
+                        <div id="pinHideButton" class="icon primary small" ng-click="hideShowPassword()" ng-show="inputType == 'text'" ng-hide="inputType == 'password'">HIDE</div>
+                        <div id="pinShowButton" class="icon primary small" ng-click="hideShowPassword()" ng-show="inputType == 'password'" ng-hide="inputType == 'text'">SHOW</div>
+                        <input id="secretPin" name="secretPin" ng-model="session.pin" numbersonly minlength='4' maxlength='4' class="mobile-grid-100 tablet-grid-100 grid-100 form-control" type="{{inputType}}" ng-required="{{pinPass && pinPass != 0}}" autocomplete="off" />
+                        <label for="secretPin" translate>Pin</label>
+                    </div>
+                </div>
+                <div class="mobile-grid-100 tablet-grid-100 grid-100 top-pad10">
+                    <input type="submit" id="authenticateButton" class="btn primary mobile-grid-100 tablet-grid-100 grid-100 top-mar20" ng-disabled="(loginForm.$valid&&authButtonEnabled) ?  false : true" value="ENTER" />
+                </div>
+            </div>
+            <div class="mobile-grid-100 tablet-grid-100 grid-100 top-pad40 small-font">
+                <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent border-top top-pad10">
+                    <div class="mobile-grid-40 tablet-grid-40 grid-50 grid-parent">
+                        <p class="small mobile-grid-100 tablet-grid-100 grid-100 grid-parent" translate>
+                            <a id="lostPasswordLink" ng-href="#lostpassword" title="Click here to recover your password" class="primary plain">Forgot Password?</a>
+                        </p>
+                    </div>
+                    <div class="mobile-grid-60 tablet-grid-60 grid-50 grid-parent">
+                        <p class="pull-right small">Don't have account? <a id="getStartedLink" ng-href="#registration" class="primary plain" title="Click here to sign up">Get Started</a></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+
+<ng-include src="includes.footer"> </ng-include>

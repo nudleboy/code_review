@@ -1,0 +1,29 @@
+<ng-include src="includes.header"> </ng-include>
+<form ng-submit="verifyOtp(otp)" name="verifyOtpForm">
+    <div class="mobile-grid-100 tablet-grid-60 tablet-suffix-20 tablet-prefix-20 grid-40 prefix-30 suffix-30 whitebox">
+        <div class="grid-100">
+            <div class="mobile-grid-100 grid-parent">
+                <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+                    <h1 class="center grey">Type in Secret Code</h1>
+                    <p class="small grey mobile-grid-100 tablet-grid-100 grid-100"><span class="primary">Tell me a secret...</span><br />I need to know it's really you, so type in the secret code I sent to <span class="primary">{{focusedPrincipal.name}}</span>.</p>
+                </div>
+            </div>
+            <div class="mobile-grid-100 grid-parent top-pad10">
+                <div class="mobile-grid-100 tablet-grid-100 grid-100">
+                    <div id="messageDiv" class="result-error-value mobile-grid-95 mobile-suffix-5 tablet-grid-95 tablet-suffix-5 grid-85 prefix-5 suffix-10 messages">
+                        <p id="errorMessage" ng-bind-html="generalMessage" ng-show="generalMessage" class="error"></p>
+                    </div>
+                    <input required name="enter_otp" ng-model="otp.otp_secret" id="enterOtpText" required numbersonly minlength="6" maxlength="6" size="6" class="mobile-grid-100 tablet-grid-100 grid-100 form-control" type="text" />
+                    <label for="enter_otp" translate>Enter OTP:</label>
+                </div>
+                <div class="mobile-grid-100 tablet-grid-100 grid-100">
+                    <input type="submit" id="letsGoButton" class="btn primary mobile-grid-100 tablet-grid-100 grid-100" ng-disabled="(verifyOtpForm.$valid&&letsGoButtonEnabled) ?  false : true" value="Let's Go!" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="mobile-grid-100 tablet-grid-60 tablet-suffix-20 tablet-prefix-20 grid-40 prefix-30 suffix-30 top-pad10">
+        <a id="resendOtpLink" href="javascript:void(0)" ng-click="resendOtp()" class="pull-right small plain primary">Oops, I don't see the secret! Pass it to me again</a>
+    </div>
+</form>
+<ng-include src="includes.footer"> </ng-include>

@@ -1,0 +1,97 @@
+<ng-include src="includes.header"> </ng-include>
+<div ng-show="state == 'authentication'">
+    <form ng-submit="authenticate(session)" name="loginForm">
+		<div class="mobile-grid-100 grid-parent">
+	        <div class="mobile-grid-80 mobile-prefix-10 mobile-suffix-10 tablet-grid-60 tablet-suffix-20 tablet-prefix-20 grid-40 prefix-30 suffix-30 whitebox">
+	            <div class="mobile-grid-100 grid-100 top-pad20">    
+	                <div id="messageDiv" class="result-error-value mobile-grid-100 tablet-grid-80 tablet-prefix-10 tablet-suffix-10 grid-80 prefix-5 suffix-15 messages">
+	                    <p id="errorMessage" ng-bind="messages" ng-show="messages" class="error"></p>
+	                    <p id="infoMessage" ng-show="info" class="info">D'oh! Did you forget which email you used before? No worries, try another one or try entering a phone number. I'll be right here.</p>
+	                </div>
+	                <div class="mobile-grid-100 tablet-grid-100 grid-100 info">
+	                    <!-- <div class="icon-info" ng-class="{ 'purple': info }" ng-click="info = !info"></div> -->
+	                    <label for="principal" translate>Email or Phone</label>
+	                    <input required type="text" id="principalText" required name="principal" ng-model="session.principal" class="mobile-grid-100 tablet-grid-100 grid-100 form-control" />
+	                </div>
+	                <div class="mobile-grid-100 tablet-grid-100 grid-100 info">
+	                    <div class="icon primary small" ng-click="hideShowPassword()" ng-show="inputType == 'text'" ng-hide="inputType == 'password'">Hide</div>
+	                    <div class="icon primary small" ng-click="hideShowPassword()" ng-show="inputType == 'password'" ng-hide="inputType == 'text'">Show</div>
+	                    <label for="secret" translate>Password</label>
+	                    <input type="{{inputType}}" id="secret" name="secret" ng-model="session.secret" class="mobile-grid-100 tablet-grid-100 grid-100 form-control" required />
+	                </div>
+	                <div class="mobile-grid-100 tablet-grid-100 grid-100 top-pad10">
+	                    <p class="small mobile-grid-100 tablet-grid-100 grid-100" translate>
+	                        <a id="recoverPasswordLink" ng-href="#lostpassword" title="Click here to recover your password" class="primary plain">forgot password?</a>
+	                    </p>
+	                    <input type="submit" id="authenticateButton" class="btn primary mobile-grid-100 tablet-grid-100 grid-100 top-mar20" ng-disabled="loginForm.$invalid" value="Authenticate" />
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+    </form>
+</div>
+
+
+<div ng-show="state == 'principalSelection'">
+	<form ng-submit="sendOtp()" name="sendOTPForm">
+		<div class="mobile-grid-100 tablet-grid-60 tablet-suffix-20 tablet-prefix-20 grid-40 prefix-30 suffix-30 whitebox">
+			<div class="grid-100">
+				<div class="mobile-grid-100 grid-parent">
+					<div class="mobile-grid-100 tablet-grid-100 grid-100">
+						<h1 class="center grey">One-Time Password</h1>
+		        		<p translate class="small grey mobile-grid-100 tablet-grid-100 grid-100">Where would you like us to send your	one-time password?</p>
+		        	</div>
+	    		</div>
+				<div class="mobile-grid-100 grid-parent">
+		            <div class="mobile-grid-100 tablet-grid-100 grid-100 info">
+		            	<div id="principalDiv" class="mobile-grid-100 tablet-grid-100 grid-100">
+			                <div ng-repeat="principal in principals" class="mobile-grid-100">
+								<div ng-repeat="method in principal.method" class="mobile-grid-100">
+									<input type="radio" id="{{principal.name}}{{method}}" ng-model="focusedPrincipal.name" name="otp.principal" value="{{principal.name}}{{method}}" id="{{principal.name}}{{method}}" ng-change="setOtp(principal)">
+									<label for="{{principal.name}}{{method}}" class="showLabel">
+									    {{principal.name}} ({{method}})
+									</label>
+								</div>
+							</div>
+						</div>
+					    <div class="mobile-grid-100 top-pad20">
+							<input type="submit" id="sendOtpButton" class="btn primary mobile-grid-100 tablet-grid-100 grid-100" ng-disabled="sendOTPForm.$invalid" value="Send OTP" />
+					    </div>
+					</div>
+				</div>
+			</div>
+		</div>
+	</form>
+</div>
+
+<div ng-show="state == 'displayOtpInput'">
+	<form ng-submit="verifyOtp(otp)">
+ 		<div class="mobile-grid-100 tablet-grid-60 tablet-suffix-20 tablet-prefix-20 grid-40 prefix-30 suffix-30 whitebox">
+	        <div class="grid-100">
+	            <div class="mobile-grid-100 grid-parent">
+	                <div class="mobile-grid-100 tablet-grid-100 grid-100">
+	                    <h1 class="center grey">Type in Secret Code</h1>
+	                    <p class="small grey mobile-grid-100 tablet-grid-100 grid-100"><span class="primary">Tell me a secret...</span><br />I need to know it's really you, so type in the secret code I sent to <span class="primary">{{selectedPrincipalFriendlyName}}</span>.</p>
+	                </div>
+	            </div>
+	            <div class="mobile-grid-100 grid-parent top-pad10">
+	                <div id="messageDiv" class="result-error-value mobile-grid-80 mobile-prefix-10 mobile-suffix-10 tablet-grid-80 tablet-prefix-10 tablet-suffix-10 grid-90 prefix-5 suffix-5 messages">
+	                    <p id="otpErrorMessage" ng-bind="messages" ng-show="messages" class="error"></p>
+	                </div>
+	                <div class="mobile-grid-100 tablet-grid-100 grid-100">
+	                    <label for="enter_otp" translate>Enter OTP:</label>
+	                    <input type="text" id="enterOtpText" name="enter_otp" required numbersonly minlength="6" maxlength="6" size="6" class="mobile-grid-100 tablet-grid-100 grid-100 form-control" ng-model="otp.otp_secret" >
+	                </div>
+	                <div class="mobile-grid-100 tablet-grid-100 grid-100">
+	                    <input type="submit" id="letsGoButton" class="btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-100 grid-100" ng-disabled="otpForm.$invalid" value="Let's Go!" />
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+	    <div class="mobile-grid-80 mobile-prefix-10 mobile-suffix-10 tablet-grid-60 tablet-suffix-20 tablet-prefix-20 grid-40 prefix-30 suffix-30 top-pad10">
+	        <a id="resendOtpLink" href="javascript:void(0)" ng-click="resendOtp()" class="pull-right small plain primary">Oops, I don't see the secret! Pass it to me again</a>
+	    </div>
+	</form>
+</div>
+
+<ng-include src="includes.footer"> </ng-include>

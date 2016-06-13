@@ -1,0 +1,24 @@
+<footer ng-class="{'rpFooter': !rpFooter}" class="ng-cloak fixed">
+    <div class="grid-container">
+        <nav>
+            <ul ng-class="{'center': rpFooter}">
+                <li ng-if="rpFooter">POWERED BY</li>
+                <li ng-if="rpFooter" id="footer_logo"></li>
+                <li>
+                    <ul ng-class="{'top-pad40': !rpFooter}">
+                        <li>&copy; Copyright 2016 Zentry</li>
+                        <li><a id="footerPrivacyPolicyLink" ui-sref="Modal.privacyPolicy" class="plain">Privacy Policy</a></li>
+                        <li><a id="footerTermsAndConditionsLink" ui-sref="Modal.termsAndConditions" title="Terms of Service" class="plain" translate>Terms of Service</a></li>
+    <!--                     <li id="eulasButtonDiv" ng-repeat="eula in profile.eulas">
+                                <span ng-click="displayEula(eula); eulaOpen = !eulaOpen">Eula</span>
+                        </li>
+                        <li id="credentialsButtonDiv" data-ng-repeat="credential in profile.credentials">
+                            <span ng-click="displayCredential(credential); credentialOpen = !credentialOpen">Credential Agreement</span>
+                        </li> -->
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</footer>
+<div ui-view="modal" autoscroll="false"></div>

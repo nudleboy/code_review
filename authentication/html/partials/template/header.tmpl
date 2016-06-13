@@ -1,0 +1,51 @@
+<header class="ng-cloak fixed">
+    <div class="grid-container" ng-class="{'center': !RoleUtility}">
+        <a href="{{APP_ROOT}}" id="logoHeaderLink"></a>
+<!--         <nav ng-if="rpFooter">
+            <ul>
+                <li>
+                    <a class="plain" id="whoWeAreLink" href="">WHO WE ARE</a>
+                </li>
+                <li>
+                    <a class="plain" id="ContactUsLink" href="">CONTACT US</a>
+                </li>
+                <li>
+                    <a class="plain" id="AppStoreLink" href="">APP STORE</a>
+                </li>
+                <li>
+                    <a class="plain" id="LearnMoreLink" href="">LEARN MORE</a>
+                </li>
+            </ul>
+        </nav> -->
+        <nav ng-if="RoleUtility" ng-controller="HeaderController">
+            <ul>
+                <li>
+                    <a id="menuIconId"><i class="fa fa-bars"></i></a>
+                    <ul>
+                        <li>
+                            <a class="plain" href="" id="logoutLink" ng-click="logout()">Logout</a>
+                        </li>
+                        <li ng-if="RoleUtility.admin">
+                            <a class="plain" id="adminLink" href="#/admin">Admin</a>
+                        </li>
+                        <li ng-if="RoleUtility.isRPAdmin">
+                            <a class="plain" id="rpManageLink" href="#/rpadmin">RP Admin Manager</a>
+                        </li>
+                        <li>
+                            <a class="plain" id="personasLink" href="#/persona">Personas</a>
+                        </li>
+                        <li>
+                            <a class="plain" id="transactionsLink" href="#/transactions">Transactions</a>
+                        </li>
+            <!--             <li id="eulasButtonDiv" ng-repeat="eula in profile.eulas">
+                                <span ng-click="displayEula(eula); eulaOpen = !eulaOpen">Eula</span>
+                        </li>
+                        <li id="credentialsButtonDiv" data-ng-repeat="credential in profile.credentials">
+                            <span ng-click="displayCredential(credential); credentialOpen = !credentialOpen">Credential Agreement</span>
+                        </li> -->
+                    </ul>
+                </li>
+            </ul>
+        </nav>
+    </div>
+</header>

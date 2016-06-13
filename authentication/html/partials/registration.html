@@ -1,0 +1,96 @@
+<ng-include src="includes.header"> </ng-include>
+
+<div class="mobile-grid-100 grid-parent">
+	<form ng-submit="register(user)" novalidate name="registration_form" id="registration_form">
+    <div class="mobile-grid-100 grid-parent">
+        <div class="mobile-grid-100 tablet-grid-60 tablet-suffix-20 tablet-prefix-20 grid-40 prefix-30 suffix-30 whitebox signup-container">
+            <div class="mobile-grid-100 tablet-grid-100 grid-100 mobile-no-border tablet-no-border">
+                <div class="mobile-grid-100 tablet-grid-100 grid-100">
+					<h1 class="top-mar0 grey center">Create your <span class="primary">Zentry</span> Account</h1>
+				</div>
+				<div class="mobile-grid-100 tablet-grid-100 grid-95 validate has-feedback">
+					<div class="result-error-value mobile-grid-95 mobile-suffix-5 tablet-grid-95 tablet-suffix-5 grid-85 prefix-5 suffix-10 messages">
+		                <p id="errorMessage" ng-bind-html="generalMessage" ng-show="generalMessage" class="error"></p>
+		                <p id="passwordErrorMessages" ng-hide="!focus || pwdValidity" class="input-help error mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+							<span class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">Password must meet the following requirements:</span>
+							<span id="passwordLetterError" ng-class="pwdHasLetter" class="mobile-grid-50 tablet-grid-50 grid-50">At least <strong>one letter</strong></span>
+							<span id="passwordNumberError" ng-class="pwdHasNumber" class="mobile-grid-50 tablet-grid-50 grid-50">At least <strong>one number</strong></span>
+							<span id="passwordCaptialError" ng-class="pwdHasCapLetter" class="mobile-grid-50 tablet-grid-50 grid-50">At least <strong>one Capital Letter</strong></span>
+							<span id="passwordCountError" ng-class="pwdValidLength" class="mobile-grid-50 tablet-grid-50 grid-50">At least <strong>8 characters long</strong></span>
+							<span id="passwordSpecialError" ng-class="pwdHasSpecial" class="mobile-grid-50 tablet-grid-50 grid-50">At least <strong>1 Special Character</strong></span>
+				            <span id="passwordConfirmationError" ng-class="{valid: passwordMatch}" class="mobile-grid-50 tablet-grid-50 grid-50" ng-show="confirmShown">Fields must <strong>Match</strong></span>
+						</p>
+	            	</div>
+                    <input id="emailAddressText" type="email" 
+		                		class="mobile-grid-100 tablet-grid-100 grid-100 form-control"
+								name="emailaddress" required ng-model="user.principal"
+								data-bv-notempty="true" data-bv-different="true"
+								data-bv-different-field="password" data-bv-different-message="Password cannot be the same as your email." />
+					<label for="emailAddressText">Email Address</label>
+	            </div>
+	           	<div class="mobile-grid-100 tablet-grid-100 grid-95 validate has-feedback">
+					<input password-validate type="password" 
+							class="mobile-grid-100 tablet-grid-100 grid-100 form-control"
+							id="createPassword" name="password" 
+							required ng-model="user.secret"
+							data-password-verify="confirmPassword" ng-focus="focus=true;" ng-blur="focus=false;" />
+					<label for="password">Create Password</label>
+					<i class="glyphicon glyphicon-remove form-control-feedback red" ng-hide="registration_form.password.$valid || registration_form.password.$pristine || focus"></i>
+					<i class="glyphicon glyphicon-ok form-control-feedback green" ng-hide="registration_form.password.$invalid"></i>
+	            </div>
+	            <div class="mobile-grid-100 tablet-grid-100 grid-95 validate has-feedback">
+					<input password-validate type="password" 
+							class="mobile-grid-100 tablet-grid-100 grid-100 form-control immediate-help no-border" 
+							id="confirmPassword" name="confirmPassword" 
+							required ng-model="user.confirmSecret"
+							data-password-verify="createPassword" ng-focus="focus=true; confirmfocus=true" ng-blur="focus=false; confirmfocus=false" />
+					<label for="confirmPassword">Confirm Password</label>
+					<i class="glyphicon glyphicon-remove form-control-feedback red" ng-hide="registration_form.confirmPassword.$valid || registration_form.confirmPassword.$pristine || confirmfocus"></i>
+					<i class="glyphicon glyphicon-ok form-control-feedback green" ng-hide="registration_form.confirmPassword.$invalid"></i>
+	            </div>
+	         	<div class="mobile-grid-100 tablet-grid-100 grid-95 validate has-feedback">
+		            <div class="result-error-value mobile-grid-95 mobile-suffix-5 tablet-grid-95 tablet-suffix-5 grid-85 prefix-5 suffix-10 messages">
+						<p id="pinErrorMessages" class="input-help error mobile-grid-100 tablet-grid-100 grid-100 grid-parent" ng-hide="registration_form.confirmPin.$valid && registration_form.createPin.$valid || registration_form.confirmPin.$pristine || registration_form.createPin.$pristine">
+							<span class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">Pin must meet the following requirements:</span>
+				            <span id="passwordMatchError" ng-class="{valid: registration_form.confirmPin.$valid && registration_form.createPin.$valid}" class="mobile-grid-50 tablet-grid-50 grid-50">Fields must <strong>Match</strong></span>
+						</p>
+	            	</div>
+            	</div>
+	            <div class="mobile-grid-100 tablet-grid-100 grid-95 validate has-feedback">
+					<input numbersonly field-match type="password" 
+							class="mobile-grid-100 tablet-grid-100 grid-100 form-control"
+							id="createPin" name="createPin" 
+							required ng-model="user.secretPin"
+							minlength="4" maxlength="4"
+							data-match-input="confirmPin" ng-focus="pinfocus=true; pinconfirmfocus=true" ng-blur="pinfocus=false; pinconfirmfocus=false"/>
+					<label for="password">Create Pin</label>
+					<i class="glyphicon glyphicon-remove form-control-feedback red" ng-hide="registration_form.createPin.$valid || registration_form.createPin.$pristine || pinfocus"></i>
+					<i class="glyphicon glyphicon-ok form-control-feedback green" ng-hide="registration_form.createPin.$invalid"></i>
+	            </div>
+	            <div class="mobile-grid-100 tablet-grid-100 grid-95 validate has-feedback">
+					<input numbersonly field-match type="password" 
+							class="mobile-grid-100 tablet-grid-100 grid-100 form-control immediate-help no-border" 
+							id="confirmPin" name="confirmPin" 
+							required ng-model="user.confirmSecretPin"
+							minlength="4" maxlength="4"
+							data-match-input="createPin" ng-focus="pinfocus=true; pinconfirmfocus=true" ng-blur="pinfocus=false; pinconfirmfocus=false"/>
+					<label for="confirmPassword">Confirm Pin</label>
+					<i class="glyphicon glyphicon-remove form-control-feedback red" ng-hide="registration_form.confirmPin.$valid || registration_form.confirmPin.$pristine || pinconfirmfocus"></i>
+					<i class="glyphicon glyphicon-ok form-control-feedback green" ng-hide="registration_form.confirmPin.$invalid"></i>
+	            </div>
+				<div class="mobile-grid-100 tablet-grid-100 grid-95 top-pad10">
+					<input type="hidden" name="passwordMatch" id="passwordMatch" ng-model="user.passMatch">
+					<p class="grey small mobile-grid-100 tablet-grid-100 grid-100 grid-parent"><strong>Click continue to agree to the <a id="termsAndConditionsLink" ui-sref="Modal.termsAndConditions" title="Terms of Service" class="primary plain" translate>Terms of Service</a> and <a id="privacyPolicyLink" ui-sref="Modal.privacyPolicy" class="primary plain">Privacy Policy</a>.</strong></p>
+				</div>
+				<div class="mobile-grid-100 tablet-grid-100 grid-95 top-pad10">
+					<input type="submit" id="submitButton" class="btn primary mobile-grid-100 tablet-grid-100 grid-100" value="CONTINUE" ng-disabled="(registration_form.$valid&&submitButtonEnabled) ?  false : true" />
+				</div>
+			</div>
+			<div class="grid-45 hide-on-mobile hide-on-tablet phone-background hide">
+				<h2 class="center">Works on <span class="grey">iOS</span> and <span class="grey">Android</span></h2>
+			</div>
+		</div>
+	</form>
+</div>
+
+<ng-include src="includes.footer"> </ng-include>
