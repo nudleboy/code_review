@@ -1,0 +1,95 @@
+<header class="ng-cloak fixed">
+    <div class="grid-container" ng-class="center">
+        <a href="{{APP_ROOT}}" id="logoHeaderLink"></a>
+    </div>
+</header>
+
+<div class="grid-90 prefix-5 suffix-5 grid-parent">
+    <div class="mobile-grid-100 grid-parent top-pad20">
+        <div class="grid-100 grid-parent">
+            <h1>My Transactions</h1>
+        </div>
+    </div>
+    <div class="grid-100 grid-parent">
+        <div class="grid-50 prefix-50 bottom-mar10">
+            <div class="grid-25">
+                <a href="" ng-click="order('createdate')" class="primary plain">Created</a>
+                <span class="sortorder primary" ng-show="predicate === 'createdate'" ng-class="{reverse:reverse}"></span>
+            </div>
+            <div class="grid-25">
+                <a href="" ng-click="order('expiration_date')" class="primary plain">Expires</a>
+                <span class="sortorder primary" ng-show="predicate === 'expiration_date'" ng-class="{reverse:reverse}"></span>
+            </div>
+            <div class="grid-25">    
+                <a href="" ng-click="order('rp_name')" class="primary plain">RP</a>
+                <span class="sortorder primary" ng-show="predicate === 'rp_name'" ng-class="{reverse:reverse}"></span>
+            </div>    
+            <div class="grid-25">
+                <a href="" ng-click="predicate=''" class="primary plain">Unsort</a> 
+            </div>
+        </div>
+    </div>
+    <div ng-repeat="transaction in userTransactions | orderBy:predicate:reverse" class="grid-50">
+        <div class="mobile-grid-100 grid-100 profile grid-parent top-pad20 bottom-pad20 bottom-mar15">
+            <div class="mobile-grid-100">
+                <div class="mobile-grid-60 tablet-grid-60 grid-60 grid-parent">{{transaction.message_subject}}</div>
+                <div class="mobile-grid-40 tablet-grid-40 grid-40 grid-parent" ng-click="getTransactionDetail(transaction); transactionOpen = !transactionOpen" >
+                    <span class="icon-add"></span>  <span class="pull-right">{{transaction.rp_name}}</span>
+                </div>
+            </div>
+
+            <div class="mobile-grid-100" collapse="transactionOpen">
+                <div class="mobile-grid-100 tablet-grid-100 grid-100">
+                    <p>{{transaction.message_body}}</p>
+                </div>
+                <div class="mobile-grid-100 tablet-grid-100 grid-100" ng-show="transaction.display == 'enter_password'">
+                    <form>
+                        <div class="mobile-grid-100 tablet-grid-100 grid-100 top-pad20">
+                            <label for="{{transaction.uuid}}">Enter Password</label>
+                            <input type="password" class="mobile-grid-60 mobile-prefix-5 mobile-suffix-5 tablet-grid-60 tablet-prefix-5 tablet-suffix-5 grid-100 form-control" id="{{transaction.uuid}}" name="{{transaction.uuid}}" ng-model="transaction.password" placeholder="Enter Password">
+                        </div>
+
+                        <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+                            <input type="submit" class="btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 grid-45 suffix-5 top-mar20" value="Submit" ng-click="submitPassword(transaction)" ng-disabled="form.$pristine" />
+                            <input type="cancel" class="btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 grid-45 prefix-5 top-mar20" value="Cancel" ng-click="hideTransaction(transaction); transactionOpen = !transactionOpen" />
+                        </div>
+                    </form>
+                </div>
+                <div class="mobile-grid-100 tablet-grid-100 grid-100" ng-show="transaction.display == 'enter_pin'">
+                    <form>
+                        <div class="mobile-grid-100 tablet-grid-100 grid-100 top-pad20">
+                            <label for="{{transaction.uuid}}">Enter Pin</label>
+                            <input type="password" class="mobile-grid-60 mobile-prefix-5 mobile-suffix-5 tablet-grid-60 tablet-prefix-5 tablet-suffix-5 grid-100 form-control" id="{{transaction.uuid}}" name="{{transaction.uuid}}" ng-model="transaction.pin" placeholder="Enter Pin">
+                        </div>
+
+                        <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+                            <input type="submit" class="btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 grid-45 suffix-5 top-mar20" value="Submit" ng-click="submitPin(transaction)" ng-disabled="form.$pristine" />
+                            <input type="cancel" class="btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 grid-45 prefix-5 top-mar20" value="Cancel" ng-click="hideTransaction(transaction); transactionOpen = !transactionOpen" />
+                        </div>
+                    </form>
+                </div>
+                <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent" ng-show="transaction.display == 'transaction_detail'">
+                    <form>
+                        <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+                            <div ng-if="!transaction.message_html" class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+                                <p class="grid-40 grid-parent">Requesting RP:</p><p class="grid-60 grid-parent">{{transaction.rp_name}}</p>
+                            </div>
+                            <div ng-if="!transaction.message_html" class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+                                <p class="grid-40 grid-parent">Title:</p><p class="grid-60 grid-parent">{{transaction.message_subject}}</p>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+                                <div class="mobile-grid-100 tablet-grid-100 grid-100 bottom-pad10" ng-if="transaction.message_html" ng-bind-html-unsafe="transaction.message_html" ng-image-data="transaction.message_images"></div>
+                                <div ng-if="!transaction.message_html"><p class="grid-40 grid-parent">Message:</p><p class="grid-60 grid-parent">{{transaction.message_body}}</p></div>
+                            </div>
+                        </div>
+                        <div class="mobile-grid-100 tablet-grid-100 grid-100">
+                            <input type="button" class="btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 grid-30 top-mar20" value="Yes" ng-click="answerTransaction(transaction, true)" />
+                            <input type="button" class="btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 grid-30 prefix-5 suffix-5 top-mar20" value="No" ng-click="answerTransaction(transaction, false)" />
+                            <input type="cancel" class="btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 grid-30 top-mar20" value="Cancel" ng-click="hideTransaction(transaction); transactionOpen = !transactionOpen" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

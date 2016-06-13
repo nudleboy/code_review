@@ -1,0 +1,36 @@
+<header class="ng-cloak fixed">
+    <div class="grid-container" ng-class="center">
+        <a href="{{APP_ROOT}}" id="logoHeaderLink"></a>
+    </div>
+</header>
+
+<div class="mobile-grid-100 grid-parent">
+	<form ng-submit="authenticate(session)" name="loginForm">    
+        <div class="mobile-grid-100 tablet-grid-60 tablet-suffix-20 tablet-prefix-20 grid-40 prefix-30 suffix-30 whitebox">
+            <div class="grid-100">    
+                <div class="mobile-grid-100 grid-parent">
+                	<div class="mobile-grid-100 tablet-grid-100 grid-100">
+						<h1 class="center grey">Enter <span class="primary">Zentry</span> {{pageState}}</h1>
+		        		<p translate class="small grey mobile-grid-100 tablet-grid-100 grid-100">Please Enter your {{pageState}} to finish authentication</p>
+		        	</div>
+	    		</div>
+                <div class="mobile-grid-100 grid-100 grid-parent relative">
+		            <div class="mobile-grid-100 tablet-grid-100 grid-100 info">
+	                    <div id="messages" class="result-error-value mobile-grid-80 mobile-prefix-10 mobile-suffix-10 tablet-grid-80 tablet-prefix-10 tablet-suffix-10 grid-80 prefix-5 suffix-15">
+	                        <p ng-bind="messages" ng-show="messages" class="error"></p>
+	                        <p ng-show="info" class="info">D'oh! Did you forget which email you used before? No worries, try another one or try entering a phone number. I'll be right here.</p>
+	                    </div>
+	                    <div class="icon primary small" ng-click="hideShowPassword()" ng-show="inputType == 'text'" ng-hide="inputType == 'password'">Hide</div>
+                    	<div class="icon primary small" ng-click="hideShowPassword()" ng-show="inputType == 'password'" ng-hide="inputType == 'text'">Show</div>
+                    	<label for="secret" translate>{{pageState}}</label>
+                    	<input id="secret" name="secret" placeholder="{{pageState}}" ng-model="session.secret" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 grid-95 form-control" type="{{inputType}}" required autocomplete="off" ng-disabled="disableElements" />
+                    </div>
+                    <div class="mobile-grid-100 tablet-grid-100 grid-100">
+                    	<input type="submit" id="authenticate" class="btn primary mobile-grid-100 tablet-grid-100 grid-100 top-mar20" ng-disabled="loginForm.$invalid || disableElements" value="ENTER" />
+                    </div>
+                </div>
+            </div>
+        </div>
+		
+    </form>
+</div>

@@ -1,0 +1,56 @@
+<header class="ng-cloak fixed">
+    <div class="grid-container" ng-class="center">
+        <a href="{{APP_ROOT}}" id="logoHeaderLink"></a>
+    </div>
+</header>
+
+<div ng-show="pageState == 'invalidTransaction'">
+    <div class="mobile-grid-100 grid-100 profile grid-parent top-pad20 bottom-pad20 bottom-mar15">
+        <div class="mobile-grid-100" collapse="transactionOpen">
+            <div class="mobile-grid-100 tablet-grid-100 grid-100">
+                <p>Invalid Transaction</p>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div ng-show="pageState == 'validTransaction'" class="grid-90 prefix-5 suffix-5 grid-parent">
+    <div class="grid-50">
+        <div class="mobile-grid-100 grid-100 profile grid-parent top-pad20 bottom-pad20 bottom-mar15">
+            <div class="mobile-grid-100">
+                <div class="mobile-grid-60 tablet-grid-60 grid-60 grid-parent">{{transaction.message_subject}}</div>
+                <div class="mobile-grid-40 tablet-grid-40 grid-40 grid-parent" >
+                    <span class="pull-right">{{transaction.rp_name}}</span>
+                </div>
+            </div>
+            <div class="mobile-grid-100">
+                <div class="mobile-grid-100 tablet-grid-100 grid-100">
+                    <div class="mobile-grid-100 tablet-grid-100 grid-100 bottom-pad10" ng-if="transaction.message_html" ng-bind-html-unsafe="transaction.message_html" ng-image-data="transaction.message_images"></div>
+                    <div ng-if="!transaction.message_html"><p>{{transaction.message_body}}</p></div>
+                </div>
+                <div class="mobile-grid-100 tablet-grid-100 grid-100">
+                    <form>
+                        <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+                            <div ng-if="!transaction.message_html" class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+                                <p class="grid-40 grid-parent">Requesting RP:</p><p class="grid-60 grid-parent">{{transaction.rp_name}}</p>
+                            </div>
+                            <div ng-if="!transaction.message_html" class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+                                <p class="grid-40 grid-parent">Title:</p><p class="grid-60 grid-parent">{{transaction.message_subject}}</p>
+                            </div>
+                            <div ng-if="!transaction.message_html" class="grid-100 grid-parent">
+                                <p class="grid-40 grid-parent">Status:</p><p class="grid-60 grid-parent">{{transaction.status}}</p>
+                            </div>
+                            <div ng-if="!transaction.message_html" class="grid-100 grid-parent">
+                                <p class="grid-40 grid-parent">Answer Date:</p><p class="grid-60 grid-parent">{{transaction.response_date}}</p>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+                                <div class="mobile-grid-100 tablet-grid-100 grid-100 bottom-pad10" ng-if="transaction.message_html" ng-bind-html-unsafe="transaction.message_html" ng-image-data="transaction.message_images"></div>
+                                <div ng-if="!transaction.message_html"><p class="grid-40 grid-parent">Message:</p><p class="grid-60 grid-parent">{{transaction.message_body}}</p></div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

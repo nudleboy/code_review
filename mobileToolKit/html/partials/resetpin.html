@@ -1,0 +1,69 @@
+<header class="ng-cloak fixed">
+    <div class="grid-container" ng-class="center">
+        <a href="{{APP_ROOT}}" id="logoHeaderLink"></a>
+    </div>
+</header>
+
+<div ng-show="pageState == 'displayChangePin'">
+    <div class="mobile-grid-100 tablet-grid-60 tablet-suffix-20 tablet-prefix-20 grid-40 prefix-30 suffix-30 whitebox">
+        <div class="grid-100">    
+            <div class="mobile-grid-100 grid-parent">
+                <div class="mobile-grid-100 tablet-grid-100 grid-100">
+                    <h1 class="center grey">Change PIN</h1>
+                    <form ng-submit="resetPin(pin)" novalidate name="form">
+                        <div class="mobile-grid-100 grid-parent relative top-mar10">
+                            <div id="messages" class="result-error-value mobile-grid-100 tablet-grid-80 tablet-prefix-10 tablet-suffix-10 grid-80 prefix-10 suffix-10">
+                                <p ng-bind-html="messages" ng-show="messages" class="error"></p>                      
+                            </div>
+                            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5">
+                                <input type="password" 
+                                        class="mobile-grid-100 tablet-grid-100 grid-100 form-control"
+                                        id="oldPin" name="oldPin" numbersonly minlength='4' maxlength='4'
+                                        required ng-model="pin.pin" />
+                                <label for="oldPin">Existing PIN</label>
+                            </div>
+                            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate has-feedback">
+                                <input type="password" 
+                                        class="mobile-grid-100 tablet-grid-100 grid-100 form-control"
+                                        id="pin" name="pin" 
+                                        required ng-model="pin.newPin" numbersonly minlength='4' maxlength='4'
+                                        data-match-input="confirmPin" ng-focus="pinfocus=true;" ng-blur="pinfocus=false;" />
+                                        <i class="glyphicon glyphicon-remove form-control-feedback red" ng-hide="form.pin.$valid || form.pin.$pristine || focus"></i>
+                                        <i class="glyphicon glyphicon-ok form-control-feedback green" ng-hide="form.pin.$invalid"></i>
+                                <label for="password">Create New Pin</label>
+                            </div>
+                            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate has-feedback">
+                                <input type="password" 
+                                        class="mobile-grid-100 tablet-grid-100 grid-100 form-control" 
+                                        id="confirmPin" name="confirmPin" 
+                                        required ng-model="pin.confirmPin" numbersonly minlength='4' maxlength='4'
+                                        data-match-input="createPin" ng-focus="pinfocus=true; pinconfirmfocus=true" ng-blur="pinfocus=false; pinconfirmfocus=false"/>
+                                        <i class="glyphicon glyphicon-remove form-control-feedback red" ng-hide="form.confirmPin.$valid || form.confirmPin.$pristine || pinconfirmfocus"></i>
+                                        <i class="glyphicon glyphicon-ok form-control-feedback green" ng-hide="form.confirmPin.$invalid"></i>
+                                <label for="confirmPassword">Confirm New Pin</label>
+        
+                            </div>
+                            <input type="hidden" name="passwordMatch" id="passwordMatch" ng-model="user.passMatch">
+                        </div>                
+                        <div class="mobile-grid-100 top-pad10">
+                            <input type="submit" class="btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5 grid-100" id="changePassword" value="SUBMIT" ng-disabled="form.$invalid" />
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div ng-show="pageState == 'displayChangeSuccess'">
+    <div class="mobile-grid-100 tablet-grid-60 tablet-suffix-20 tablet-prefix-20 grid-40 prefix-30 suffix-30 whitebox">
+        <div class="grid-100">    
+            <div class="mobile-grid-100 grid-parent">
+                <div class="mobile-grid-100 tablet-grid-100 grid-100">
+                    <h1 class="center grey">Change Success</h1>
+                    <p>Pin changed successfully.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

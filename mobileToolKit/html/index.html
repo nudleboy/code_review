@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en" ng-app="mtkApp">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Zentry</title>
+
+    <link rel="stylesheet" type="text/css" href="{{APP_ROOT}}/applications/authentication/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="{{APP_ROOT}}/applications/authentication/css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" type="text/css" href="{{APP_ROOT}}/applications/authentication/css/jquery-ui-1.10.4.min.css" />
+    <link rel="stylesheet" type="text/css" href="{{APP_ROOT}}/applications/authentication/css/unsemantic-grid-desktop-no-ie7.css" />
+    <link rel="stylesheet" type="text/css" href="{{APP_ROOT}}/applications/authentication/css/sympl.css" />
+</head>
+<body>
+    <div class="view-container">
+        <div ng-view data-autoscroll ng-cloak></div>
+    </div>
+
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/jquery-1.11.1.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/jquery-ui-1.10.4.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/angular.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/angular-route.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/angular-resource.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/angular-cookies.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/ui-bootstrap.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/modernizr.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/angular-gettext.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/angular-ui-router.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script> 
+    <script src='{{APP_ROOT}}/applications/authentication/js/lib/platform.js'></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/require-2.1.15.min.js"></script>
+
+    <script src="{{APP_ROOT}}/applications/authentication/js/directives.js?noCache={{TIME}}"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/services.js?noCache={{TIME}}"></script>
+    
+    <script src="{{APP_ROOT}}/applications/mobileToolKit/js/app.js?noCache={{TIME}}"></script>
+    <script src="{{APP_ROOT}}/applications/mobileToolKit/js/services.js?noCache={{TIME}}"></script>
+    <script src="{{APP_ROOT}}/applications/mobileToolKit/js/controllers/controller.js?noCache={{TIME}}"></script>
+    <script src="{{APP_ROOT}}/applications/mobileToolKit/js/controllers/resetPinController.js?noCache={{TIME}}"></script>
+    <script src="{{APP_ROOT}}/applications/mobileToolKit/js/controllers/transactionController.js?noCache={{TIME}}"></script>
+    <script src="{{APP_ROOT}}/applications/mobileToolKit/js/controllers/transactionDetailController.js?noCache={{TIME}}"></script>
+    <script src="{{APP_ROOT}}/applications/mobileToolKit/js/controllers/transactionHistoryDetailController.js?noCache={{TIME}}"></script>
+    <script src="{{APP_ROOT}}/applications/mobileToolKit/js/controllers/qrauthController.js?noCache={{TIME}}"></script>
+    <script src="{{APP_ROOT}}/applications/mobileToolKit/js/controllers/resetPasswordController.js?noCache={{TIME}}"></script>
+
+    <script type="text/javascript">
+        APP_ROOT = '{{APP_ROOT}}';
+        BOOM_URL = '{{BOOM_URL}}';
+        API_CONTEXT = '{{API_CONTEXT}}';
+        AUTHN_TYPE = 'INTERNAL';
+        RPID = '{{RPID}}';
+        callback = '{{mtk_callback_url}}';
+        qr_id = '{{qr_id}}';
+        app_id = '{{app_id}}';
+        WORKFLOW = '{{WORKFLOW}}';
+        MTK_API_CONTEXT = '{{MTK_API_CONTEXT}}';
+        TIME = '{{TIME}}';
+    </script>
+</body>
+</html>
