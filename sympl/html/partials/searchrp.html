@@ -1,0 +1,63 @@
+<ng-include src="includes.header"> </ng-include>
+
+<div class="grid-container">
+    <div class="grid-100 prefix-5">
+        <div class="profile grid-100 grid-parent top-pad20">
+            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 grid-parent tablet-grid-90 tablet-prefix-5 tablet-suffix-5 grid-80 prefix-10 suffix-10">
+                <div class="mobile-grid-100 grid-parent top-mar20">
+                    Relying Party Search
+                </div>
+                
+                <div class="mobile-grid-100 grid-parent top-mar20 border-bottom">
+                    <div class="grid-50 grid-parent">
+                        <input type="text" id="nameSearchText" placeholder="Enter Relying Party Name" ng-model="nameSearch" class="form-control stretch-input">
+                    </div>
+                    <div class="grid-50 grid-parent left-pad20">
+                        <input type="button" id="nameSearchButton"  ng-click="searchByName()" value="Search By Name" class="btn primary mobile-grid-100 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 grid-100">
+                    </div>
+                    <div class="grid-50 grid-parent">
+                        <input type="text" id="idSearchText" placeholder="Enter Relying Party Id" ng-model="idSearch" class="form-control stretch-input">
+                    </div>
+                    <div class="grid-50 grid-parent left-pad20">
+                        <input type="button" id="nameSearchButton"  ng-click="searchById()" value="Search By Id" class="btn primary mobile-grid-100 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 grid-100">
+                    </div>
+                    
+                </div>
+                <div class="mobile-grid-100 grid-parent top-mar20 bottom-mar20" ng-if="searchResultMessage">
+                    {{searchResultMessage}}
+                </div>
+
+                <div class="mobile-grid-100 grid-parent top-mar20 top-mar20" ng-if="users && canAssignRoles">
+                    Role Management
+                </div>
+                <div class="mobile-grid-100 grid-parent top-mar20 border-bottom" ng-if="users && canAssignRoles">
+                    <div class="grid-25">
+                        <select ng-click="toggleRoleAssignmentButtons()" id="selectedRolesInput" ng-multiple="true" multiple="true" size="5" ng-model="selectedRoles" ng-options="c.name for c in assignableRoles"></select>
+                    </div>
+                    <div class="grid-25">
+                        <input id="addRolesButton" ng-disabled="assignRoleButtonDisabled" ng-click="addRoles()" type="button" value="Add Roles" class="btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 grid-60 pull-right">
+                        <input id="removeRolesButton" ng-disabled="assignRoleButtonDisabled" ng-click="removeRoles()" type="button" value="Remove" class="btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 grid-60 pull-right top-mar20">
+                    </div>
+                </div>
+
+                <div class="mobile-grid-100 grid-parent top-mar20" ng-if="rps">
+                    {{searchResultsNumber}}
+                </div>
+                <div class="mobile-grid-100 grid-parent top-mar20" ng-if="rps">
+                    <div class="grid-25">Name</div>
+                    <div class="grid-50">Description</div>
+                    <div class="grid-25" ng-if="RoleUtility.modifyRP">Link to Relying Party</div>
+                </div>
+                <div id="rp-{{rp.uuid}}" class="mobile-grid-100 grid-parent top-mar20" ng-if="rps" ng-repeat="rp in rps">
+                    <div class="grid-25">{{rp.name}}&nbsp;</div>
+                    <div class="grid-50">{{rp.description}}&nbsp;</div>
+                    <div class="grid-25" ng-if="RoleUtility.modifyRP">
+                        <a href="#/editrp?rp_uuid={{rp.uuid}}">manage relying party</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-include src="includes.footer"> </ng-include>

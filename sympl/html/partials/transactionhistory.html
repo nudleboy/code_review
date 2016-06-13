@@ -1,0 +1,64 @@
+<ng-include src="includes.header"> </ng-include>
+<div class="grid-container">
+    <div class="grid-90 prefix-5 suffix-5 grid-parent">
+        <div class="mobile-grid-100 grid-parent top-pad20">
+            <div class="grid-100 grid-parent">
+                <h1>My Historical Transactions</h1>
+            </div>
+        </div>
+        <div class="grid-100 grid-parent">
+            <div class="grid-50 prefix-50 bottom-mar10">
+                <div class="grid-25">
+                    <a href="" ng-click="order('createdate')" class="primary plain">Created</a>
+                    <span class="sortorder primary" ng-show="predicate === 'createdate'" ng-class="{reverse:reverse}"></span>
+                </div>
+                <div class="grid-25">
+                    <a href="" ng-click="order('expiration_date')" class="primary plain">Expires</a>
+                    <span class="sortorder primary" ng-show="predicate === 'expiration_date'" ng-class="{reverse:reverse}"></span>
+                </div>
+                <div class="grid-25">
+                    <a href="" ng-click="order('rp_name')" class="primary plain">RP</a>
+                    <span class="sortorder primary" ng-show="predicate === 'rp_name'" ng-class="{reverse:reverse}"></span>
+                </div>
+                <div class="grid-25">
+                    <a href="" ng-click="predicate=''" class="primary plain">Unsort</a>
+                </div>
+            </div>
+        </div>
+        <div ng-repeat="transaction in userTransactions | orderBy:predicate:reverse" class="grid-50">
+            <div class="mobile-grid-100 grid-100 profile grid-parent top-pad20 bottom-pad20 bottom-mar15">
+                <div class="mobile-grid-100">
+                    <div class="mobile-grid-60 tablet-grid-60 grid-60 grid-parent">{{transaction.message_subject}}&nbsp;</div>
+                    <div class="mobile-grid-40 tablet-grid-40 grid-40 grid-parent" ng-click="getTransactionDetail(transaction); transactionOpen = !transactionOpen" >
+                        <span class="icon-add"></span>  <span class="pull-right">{{transaction.rp_name}}</span>
+                    </div>
+                </div>
+                <div class="mobile-grid-100" ng-show="transactionOpen">
+                    <div class="mobile-grid-100 tablet-grid-100 grid-100">
+                        <div class="mobile-grid-100 tablet-grid-100 grid-100 bottom-pad10" ng-if="transaction.message_html" ng-bind-html-unsafe="transaction.message_html" ng-image-data="transaction.message_images"></div>
+                        <div ng-if="!transaction.message_html"><p>{{transaction.message_body}}</p></div>
+                    </div>
+                    <div class="mobile-grid-100 tablet-grid-100 grid-100">
+                        <form>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+                                <div class="grid-100 grid-parent">
+                                    <p class="grid-40 grid-parent">Requesting RP:</p><p class="grid-60 grid-parent">{{transaction.rp_name}}</p>
+                                </div>
+                                <div class="grid-100 grid-parent">
+                                    <p class="grid-40 grid-parent">Title:</p><p class="grid-60 grid-parent">{{transaction.message_subject}}</p>
+                                </div>
+                                <div class="grid-100 grid-parent">
+                                    <p class="grid-40 grid-parent">Status:</p><p class="grid-60 grid-parent">{{transaction.status}}</p>
+                                </div>
+                                <div class="grid-100 grid-parent">
+                                    <p class="grid-40 grid-parent">Answer Date:</p><p class="grid-60 grid-parent">{{transaction.response_date}}</p>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<ng-include src="includes.footer"> </ng-include>

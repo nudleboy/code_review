@@ -1,0 +1,146 @@
+<ng-include src="includes.header"> </ng-include>
+<div class="grid-container">
+	<div>{{generalMessage}}</div>
+	<div ng-repeat="eula in profile.eulas" collapse="eulaOpen">
+	    <div ng-show="eula.showEula" class="fake-input">
+	        {{eula.license.text}}
+	    </div>
+	</div>
+	<div data-ng-repeat="credential in profile.credentials" collapse="credentialOpen">
+	    <div ng-show="credential.showCredential" class="fake-input">
+	        {{credential.license.text}}
+	    </div>
+	</div>
+	<!-- <div ng-hide="profileRendered && principalsRendered" class="grid-100 center top-pad20">
+	    <i class="fa fa-spinner fa-pulse" style="font-size: 10em"></i>
+	</div>
+	<div ng-show="profileRendered && principalsRendered" class="grid-50 prefix-5"> -->
+	<div class="grid-50 prefix-5">
+	    <div ng-hide="activeRPID">
+	        &nbsp;
+	    </div>
+	    <div id="personaDiv" class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent" ng-show="activeRPID">
+		    <div ng-repeat="persona in personas" ng-show="persona.displayEditAttributes && persona.rp_uuid == activeRPID">
+			    <div class="mobile-grid-100 grid-parent top-pad20">
+			        <div class="grid-100 grid-parent">
+			            <h1>{{persona.label}}</h1>
+			        </div>
+			    </div>
+			    <div class="profile grid-100 grid-parent top-pad20">
+			        <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 grid-parent tablet-grid-90 tablet-prefix-5 tablet-suffix-5 border-bottom grid-80 prefix-10 suffix-10">
+			            <div class="mobile-grid-50 tablet-grid-50 grid-50 editable">
+			                <img src="//placehold.it/175x175" class="circular">
+			                <!-- <div class="icon-edit" ng-click="profileEditOpen = !profileEditOpen"></div> -->
+			            </div>
+			            <div class="mobile-grid-50 tablet-grid-50 grid-50 top-pad20">
+			                <div data-ng-repeat="attribute in profile.persona.attributes">
+			                    <div ng-if="attribute.field_name == 'firstName'">{{attribute.value}}</div>
+			                    <div ng-if="attribute.field_name == 'lastName'">{{attribute.value}}</div>
+			                </div>
+			            </div>
+			        </div>
+			        <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 grid-parent tablet-grid-90 tablet-prefix-5 tablet-suffix-5 border-bottom grid-80 prefix-10 suffix-10">
+				        <form ng-submit="updateAttributes(persona, attributes)" novalidate name="form" id="form" class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent whitebox">
+			                <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent" ng-repeat="attribute in attributes">
+			                    <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent info">
+			                        <input ng-if="attribute.user_provided == true" type="text" class="mobile-grid-100 tablet-grid-100 grid-100 form-control" id="{{attribute.field_name}}" name="{{attribute.field_name}}"
+			                               ng-change="persona.isAttributeEdited = true" ng-model="attribute.value">
+			                        <input ng-if="attribute.user_provided == false && attribute.field_name == 'zen_phone'" type="text" class="mobile-grid-100 tablet-grid-100 grid-100 form-control" id="{{attribute.field_name}}" name="{{attribute.field_name}}"
+			                               ng-model="attribute.value" disabled>
+			                        <input ng-if="attribute.user_provided == false && attribute.field_name != 'zen_phone'" type="text" class="mobile-grid-100 tablet-grid-100 grid-100 form-control" id="{{attribute.field_name}}" name="{{attribute.field_name}}"
+			                               ng-model="attribute.value" disabled>
+			                        <label ng-class="{empty:attribute.value == ''}" for="{{attribute.field_name}}" class="showLabel mobile-grid-30 tablet-grid-30 grid-30 grid-parent">{{attribute.field_label}}</label>
+			                        <span ng-if="attribute.field_name == 'zen_phone'" class="mobile-grid-10 mobile-prefix-5 mobile-suffix-5 tablet-grid-20 tablet-prefix-5 tablet-suffix-5 grid-10">
+			                            <span ng-if="attribute.properties.method.indexOf('sms') >= 0">
+			                                mobile
+			                            </span>
+			                            <span ng-if="attribute.properties.method.indexOf('ivr') >= 0 && attribute.properties.method.indexOf('sms') < 0">
+			                                landline
+			                            </span>
+			                        </span>
+			                    </div>
+			                </div>
+			    	        	
+				        	<div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+			            		<input id="saveChangesButton" type="submit" class="btn primary mobile-grid-100 tablet-grid-100 grid-100 top-mar20" value="Save Changes" ng-disabled="(form.$valid&&SubmitButtonEnabled) ?  false : true" />
+			        		</div>
+			        		<div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+			            		<input id="deletePersonaButton" type="button" class="btn primary mobile-grid-100 tablet-grid-100 grid-100 top-mar20" value="Delete Persona" ng-click="deletePersona(persona)" />
+			        		</div>
+			        	</form>
+			        </div>
+			        <div ng-show="persona.displayEditAttributes" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 grid-parent tablet-grid-90 tablet-prefix-5 tablet-suffix-5 border-bottom grid-80 prefix-10 suffix-10">
+			            <div class="mobile-grid-100 grid-100 grid-parent">
+			                <div class="mobile-grid-60 tablet-grid-60 grid-60 grid-parent">Alerts</div>
+			                <div class="mobile-grid-40 tablet-grid-40 grid-40 grid-parent" ng-click="alertsOpen = !alertsOpen" title="add alerts" >
+			                    <span id="expandAlertsButton" class="icon-add"></span>
+			                </div><br />
+			                <div id="alertsDiv" class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+				                <div class="mobile-grid-100 grid-100 grid-parent top-pad20" ng-repeat="alert in persona.alerts" collapse="alertsOpen">
+				                    <div class="mobile-grid-80 tablet-grid-80 grid-80">{{alert.description}}</div>
+				                    <div class="btn-group mobile-grid-20 tablet-grid-20 grid-20">
+				                        <input type="checkbox" ng-click="setAlert(alert, $event)" id="switch_{{persona.rp_uuid}}_{{$index}}" name="switch_{{persona.rp_uuid}}_{{$index}}" class="switch" ng-model="alert.enabled" ng-checked="!alert.enabled" ng-disabled="alert.disableSlider" />
+				                        <label for="switch_{{persona.rp_uuid}}_{{$index}}">Enable</label>
+				                    </div>
+				                </div>
+				            </div>
+			            </div>
+			        </div>
+			    </div>
+			</div>
+		</div>
+	</div>
+	<div class="grid-35 suffix-5">
+	    <div class="mobile-grid-100 grid-parent top-pad20">
+	        <div class="grid-100 grid-parent">
+	            <h1>My Personas</h1>
+	        </div>
+	    </div>
+	    <div id="personaListDiv" class="grid-100 mobile-grid-100 tablet-grid-100 grid-parent">
+		    <div ng-repeat="persona in personas" class="profile grid-100 grid-parent top-pad20 bottom-pad20 bottom-mar15 overflow-hidden">
+		        <div class="mobile-grid-100 grid-100" ng-click="editAttributes(persona)">
+		            <div class="mobile-grid-35 tablet-grid-35 grid-35">
+		                <img src="//placehold.it/100x100" class="circular">
+		            </div>
+		            <div class="mobile-grid-65 tablet-grid-65 grid-65">
+		                <h3 class="top-mar0">{{persona.label}}</h3>
+		                <p class="grid-30 grid-parent">
+		                    <span class="icon-iphone1 large-icon"></span>
+		                </p>
+		                <p class="grid-70 grid-parent">
+		                    <strong>iOS Device</strong><br />
+		                    <span class="small">Last login 06-24-15</span>
+		                </p>
+		            </div>
+		        </div>
+		    </div>
+		</div>
+	</div>
+
+
+	<!-- 
+	<div class="" style="z-index: 3001" id="update_common_attrs_div" ng-show="displayChanges">
+		<div class="mobile-grid-100 grid-parent top-pad20">
+			<div class="grid-100 grid-parent">
+	            <h1>You used the same value for {{attrsToChangeFieldLabel}} in other personas.  Would you like to update those as well?</h1>
+	        </div>
+		</div>
+		<div class="profile grid-100 grid-parent top-pad20 bottom-pad20 bottom-mar15 overflow-hidden">
+			<form ng-submit="updateLikeAttributes(attrsToChange)" novalidate name="likeAttrForm" id="likeAttrForm" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 border-bottom grid-80 prefix-10 suffix-10 grid-parent">
+				<div class="mobile-grid-100 tablet-grid-100 grid-100 info" ng-repeat="attribute in attrsToChange">
+					<div class="mobile-grid-80 tablet-grid-80 grid-80 grid-parent ng-binding">
+						{{attribute.persona_label}}
+					</div>
+					<input type="checkbox" id="switch_{{attribute.uuid}}" name="switch_{{attribute.uuid}}" class="switch" ng-model="attribute.change" ng-checked="attribute.change" ng-disabled="false">
+					<label for="switch_{{attribute.uuid}}">{{attribute.persona_label}}</label>
+				</div>
+				<div class="mobile-grid-100 tablet-grid-100 grid-100">
+	           		<input type="submit" class="btn primary mobile-grid-100 tablet-grid-100 grid-100 top-mar20" value="Save Changes" ng-disabled="form.$pristine" />
+	           		<input type="button" class="btn primary mobile-grid-100 tablet-grid-100 grid-100 top-mar20" value="Close" ng-click="closeModal()" />
+	       		</div>
+				
+			</form>
+		</div>
+	</div> -->
+</div>
+<ng-include src="includes.footer"> </ng-include>

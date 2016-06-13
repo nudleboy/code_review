@@ -1,0 +1,21 @@
+	<div class="mobile-grid-100 grid-parent top-pad20">
+		<div class="grid-100 grid-parent">
+            <h1>You used the same value for {{attrsToChangeFieldLabel}} in other personas.  Would you like to update those as well?</h1>
+        </div>
+	</div>
+	<div class="profile grid-100 grid-parent top-pad20 bottom-pad20 bottom-mar15 overflow-hidden">
+		<form ng-submit="updateLikeAttributes(attrsToChange)" novalidate name="likeAttrForm" id="likeAttrForm" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 border-bottom grid-80 prefix-10 suffix-10 grid-parent">
+			<div class="mobile-grid-100 tablet-grid-100 grid-100 info" ng-repeat="attribute in attrsToChange">
+				<div class="mobile-grid-80 tablet-grid-80 grid-80 grid-parent ng-binding">
+					{{attribute.persona_label}}
+				</div>
+				<input type="checkbox" id="switch_{{attribute.uuid}}" name="switch_{{attribute.uuid}}" class="switch" ng-model="attribute.change" ng-checked="attribute.change" ng-disabled="false">
+				<label for="switch_{{attribute.uuid}}">{{attribute.persona_label}}</label>
+			</div>
+			<div class="mobile-grid-100 tablet-grid-100 grid-100">
+				<input type="submit" id="saveLikeAttrButton" class="btn primary mobile-grid-100 tablet-grid-100 grid-100 top-mar20" value="Save Changes" ng-disabled="form.$pristine" />
+				<input type="button" id="ignoreButton" class="btn primary mobile-grid-100 tablet-grid-100 grid-100 top-mar20" value="Ignore" ng-click="closeModal()" />
+       		</div>
+			
+		</form>
+	</div>

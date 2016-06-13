@@ -1,0 +1,705 @@
+<ng-include src="includes.header"> </ng-include>
+
+<div class="grid-container">
+    <div ng-bind="generalMessage"></div>
+    <div id="eulasDiv" ng-repeat="eula in profile.eulas" collapse="eulaOpen">
+        <div ng-show="eula.showEula" class="fake-input">
+            {{eula.license.text}}
+        </div>
+    </div>
+    <div id="credentialDiv" data-ng-repeat="credential in profile.credentials" collapse="credentialOpen">
+        <div ng-show="credential.showCredential" class="fake-input">
+            {{credential.license.text}}
+        </div>
+    </div>
+    <div ng-show="!profileRendered && !principalsRendered" class="grid-100 center top-pad20">
+        <i id="loadingSpinner" class="fa fa-spinner fa-pulse" style="font-size: 10em"></i>
+    </div>
+    <div id="displayContentDiv" ng-show="profileRendered && principalsRendered" class="grid-50 prefix-5 ng-cloak">
+        <div class="mobile-grid-100 grid-parent top-pad20">
+            <div class="grid-100 grid-parent">
+                <h1 ng-bind="profile.persona.label"></h1>
+            </div>
+        </div>
+        <div class="profile grid-100 grid-parent top-pad20 ng-cloak">
+            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 border-bottom grid-80 prefix-10 suffix-10">
+                <div class="mobile-grid-50 tablet-grid-50 grid-50 editable">
+                	<div id="profileImage" ng-show="profile.user.image_type">
+                		<img ng-src="data:{{profile.user.image_type}};base64,{{profile.user.image}}" height="175" width="175" class="circular">
+                    </div>
+                    <div id="blankImage" ng-show="!profile.user.image_type">
+                    	<img src="//placehold.it/175x175" height="175" width="175" class="circular">
+                    </div>
+                    <div id="openUploadImage" class="icon-edit" ng-click="uploadImageOpen = !uploadImageOpen"></div>
+                </div>
+                <div class="mobile-grid-50 tablet-grid-50 grid-50 top-pad20">
+                    <div data-ng-repeat="attribute in profile.persona.attributes">
+                        <div id="firstNameText" ng-if="attribute.field_name == 'firstName'">{{attribute.value}}</div>
+                        <div id="lastNameText" ng-if="attribute.field_name == 'lastName'">{{attribute.value}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="mobile-grid-100 border-bottom grid-80 prefix-10 suffix-10" collapse="uploadImageOpen">
+            	<form name="image_upload" class="top-pad20 whitebox">
+    	        	<fieldset>
+    	        		<div class="mobile-grid-100 grid-parent">
+    	        			Profile Image: 
+                            <input type="file" id="fileUpload" class="bottom-pad10 grid-parent grid-100" style="overflow: hidden" ngf-select ng-model="picFile" name="fileUpload" accept="image/*">
+    	        			<div ng-show="picFile != null">
+                                <div class="grid-parent grid-10">
+                                    <i id="rotateLeftButton" class="glyphicon glyphicon-repeat" ng-click="rotateLeft()"></i>
+                                </div>
+                                <div class="grid-parent grid-10">
+                                    <i id="rotateRightButton" class="glyphicon glyphicon-repeat reverse" ng-click="rotateRight()"></i>
+                                </div>
+                                <div class="grid-parent grid-100">
+                                    <img-crop image="profileImage" class="cropArea" result-image="croppedProfileImage" result-image-size="175"></img-crop>
+                                </div>
+    	        			</div>
+    	        			<div ng-show="picFile != null" class="grid-parent mobile-grid-100 top-pad10 bottom-pad10">
+    	        				<img ng-src="{{croppedProfileImage}}" class="circular" />
+    	        			</div>
+    	        			<div class="mobile-grid-100 grid-parent top-pad10">
+    	        				<button id="submitImageButton" class="btn primary" ng-disabled="picFile == null" ng-click="uploadImage()">Submit</button>
+    	        			</div>
+    	        			<div class="grid-parent mobile-grid-100 top-pad10" ng-show="uploadProgress >= 0 && uploadProgress < 100">
+    	        				<div class="progress" ng-show="uploadProgress >= 0 && uploadProgress < 100">
+    	                			<div id="uploadProgressDiv" class="ng-binding" style="width:{{uploadProgress}}%" ng-bind="uploadProgress + '%'"></div>
+    	            			</div>
+    	            		</div>
+    	            		<div id="uploadSuccesfulDiv" class="grid-parent mobile-grid-100 top-pad10" ng-show="uploadResult != null">
+    	            			Upload successful
+    	            		</div>
+    	        		</div>
+    	        	</fieldset>
+            	</form>
+            </div>
+
+            <!-- KBA Section -->
+            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 border-bottom grid-80 prefix-10 suffix-10 grid-parent" ng-if="profile.credentials[0].level == 2">
+                <div class="mobile-grid-100 grid-parent">
+                    <div class="mobile-grid-60 tablet-grid-60 grid-60 grid-parent">KBA</div>
+                    <div class="mobile-grid-40 tablet-grid-40 grid-40 grid-parent" ng-click="kbaOpen = !kbaOpen" title="submit KBA" >
+                        <span id="expandKbaButton" class="icon-add"></span>
+                    </div><br />
+                </div>
+    	        <div class="mobile-grid-100 grid-80 prefix-10 suffix-10" collapse="kbaOpen">
+    	            <form novalidate name="profile_form" ng-submit="updateProfile(profile)" id="profile_form">
+    	                <div class="mobile-grid-100 grid-parent" ng-show="profile.credentials[0].level == 1">
+    	                    <div class="mobile-grid-100 grid-parent">
+    	                        <input type="button" id="saveAndAnswerKbaButton" ng-click="getKbaQuestions()" value="Answer KBA" class="btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 grid-60 pull-right top-mar20" ng-disabled="(profile_form.$valid&&updateProfileEnabled) ?  false : true" />
+    	                    </div>
+    	                </div>
+    	                <div class="mobile-grid-100 grid-parent" ng-show="profile.credentials[0].level == 2 && !showKbaSubmit">
+    	                    <div class="mobile-grid-100 grid-parent">
+    	                        <input type="button" id="answerKbaButton" class=" btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 grid-60 pull-right top-mar20" value="Answer KBA questions" ng-click="getKbaQuestions()"  ng-disabled="(profile_form.$valid&&updateProfileEnabled) ?  false : true"/>
+    	                    </div>
+    	                </div>
+    	            </form>
+    	        </div>
+    	        <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 grid-parent tablet-grid-90 tablet-prefix-5 tablet-suffix-5 grid-100 grid-parent" ng-show="showKbaSubmit">
+    	            <div class="mobile-grid-100 grid-100 grid-parent">
+    	                <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">KBA questions</div>
+    	                <div class="mobile-grid-100 grid-parent relative top-mar10">
+    	                    <form>
+    	                        <div id="kbaQuestionsDiv" ng-repeat="question in kba.questions">
+    	                            <h2>{{question.text}}</h2>
+    	                            <div data-ng-repeat="choice in question.choices">
+    	                                <input type="radio" ng-model="question.answer" name="{{choice.choiceId}}{{choice.text}}" value="{{choice.choiceId}}" id="{{choice.choiceId}}{{choice.text}}">
+    	                                <label for="{{choice.choiceId}}{{choice.text}}" class="showLabel">{{choice.text}}</label>
+    	                            </div>
+    	                        </div>
+    	                        <div class="mobile-grid-100 grid-parent top-pad10">
+    	                            <input type="button" id="submitKbaButton" ng-click="submitKba()" value="Submit Kba" class="btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5">
+    	                        </div>
+    	                   </div>
+    	                </form>
+    	            </div>
+    	        </div>
+    	    </div>
+
+            <!-- alert Section -->
+            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 border-bottom grid-80 prefix-10 suffix-10 grid-parent" ng-if="coreAlerts">
+                <div class="mobile-grid-100 grid-parent">
+                    <div class="mobile-grid-60 tablet-grid-60 grid-60 grid-parent">Alerts</div>
+                    <div class="mobile-grid-40 tablet-grid-40 grid-40 grid-parent" ng-click="alertsOpen = !alertsOpen" title="add alerts" >
+                        <span id="expandAlertsButton" class="icon-add"></span>
+                    </div><br />
+                </div>
+                <div id="coreAlertsDiv" class="mobile-grid-100 grid-100 grid-parent" ng-repeat="alert in coreAlerts" collapse="alertsOpen">
+                    <div class="mobile-grid-80 tablet-grid-80 grid-80">{{alert.description}}</div>
+                    <div class="btn-group mobile-grid-20 tablet-grid-20 grid-20">
+                        <input type="checkbox" ng-click="setAlert(alert, $event)" id="switch_core_alert1_{{$index}}" name="switch_core_alert1_{{$index}}" class="switch" ng-model="alert.enabled" ng-checked="!alert.enabled" ng-disabled="alert.disableSlider" />
+                        <label for="switch_core_alert1_{{$index}}">Enable</label>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Email section -->
+            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 border-bottom grid-80 prefix-10 suffix-10 grid-parent">
+                <div class="mobile-grid-100 grid-parent">
+                    <div class="mobile-grid-60 tablet-grid-60 grid-60 grid-parent">Email Addresses</div>
+                    <div class="mobile-grid-40 tablet-grid-40 grid-40 grid-parent" ng-click="emailOpen = !emailOpen" title="add email" >
+                        <span id="expandEmailButton" class="icon-add"></span>
+                    </div><br />
+                    <div id="emailPrincipalsDiv" class="grid-100 tablet-100 mobile-100 grid-parent">
+    	                <div ng-repeat="principal in principals" class="grid-100 grid-parent">
+    	                    <div class="grid-100 grid-parent" ng-show="principal.displayPrincipal == true && principal.verified == true && principal.type == 'email'">
+    	                        <div class="mobile-grid-80 tablet-grid-80 grid-80">
+    	                            <input type="radio"
+    	                                    ng-change="setPrimaryEmail(principal.name, $index, true)" ng-model="principal.isDefault" 
+    	                                    name="primary_checkbox_{{$index}}" id="primary_checkbox_{{$index}}" 
+    	                                    ng-true-value="true" ng-false-value="false" ng-checked="principal.isDefault">
+    	                            <label for="primary_checkbox_{{$index}}">{{principal.name}}</label>
+    	                        </div>
+    	                        <div class="btn-group mobile-grid-20 tablet-grid-20 grid-20">
+    	                            <input type="checkbox" ng-click="setPrincipalAvailability(principal, $event)" id="switch_{{$index}}" name="switch_{{$index}}" class="switch" ng-model="principal.enabled.method.type[$index]" ng-checked="principal.available" ng-disabled="principalsending" />
+    	                            <label for="switch_{{$index}}">Enable</label>
+    	                        </div>
+    	                        <div class="mobile-grid-100 tablet-grid-100 grid-100 small" ng-show="principal.isDefault == false">
+    	                            <a href="" ng-click="deleteEmail(principal.name, $index)">Delete email</a>
+    	                        </div>
+    	                    </div>
+    	                </div>
+    	            </div>
+                    <div ng-show="display_email_all_link == 'show_all'">
+                        <span id="showAllEmailButton" ng-click="toggleEmailDisplayLink()" class="small">Show All<span>
+                    </div>
+                    <div ng-show="display_email_all_link == 'hide_all'">
+                        <span id="hideAllEmailButton" ng-click="toggleEmailDisplayLink()" class="small">Hide All<span>
+                    </div>
+                    <!-- Add New Email Block -->
+                    <div ng-controller="EmailController" id="emailController" collapse="emailOpen" class="whitebox top-mar10 bottom-mar10">
+                        <form novalidate name="add_email_form" ng-submit="addEmail(email)">
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+                                <div class="messages result-error-value mobile-grid-100 tablet-grid-80 tablet-prefix-10 tablet-suffix-10 grid-80 prefix-10 suffix-10">
+                                    <p id="emailErrorMessage" ng-show="principalUpdateMessage" ng-bind-html="principalUpdateMessage" class="error"></p>
+                                    <p id="invalidEmailMessage" ng-show="add_email_form.new_email.$error.email && add_email_form.new_email.$dirty" class="error">Invalid Email Address</p>
+                                    <p id="addEmailInfoMessage" ng-show="info" class="info">D'oh! Did you forget which email you used before? No worries, try another one or try entering a phone number. I'll be right here.</p>
+                                </div>
+                                <div class="mobile-grid-100 tablet-grid-100 grid-100 validate">
+                                    <input type="email" id="newEmailText" required name="new_email" ng-model="email.principal" class="mobile-grid-100 tablet-grid-100 grid-100 form-control">
+                                    <label for="new_email" translate>Email Address:</label>
+                                </div>
+                                <div class="mobile-grid-100 tablet-grid-100 grid-100 validate">
+                                    <input type="checkbox" id="newEmailPrimaryCheckbox"
+                                        ng-model="email.isDefault" ng-checked="email.isDefault" 
+                                        name="default_email" id="default_email" 
+                                        ng-true-value="true" ng-false-value="false">
+                                    <label for="default_email" class="showLabel">Make primary</label>
+                                </div>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+                                <p class="small mobile-grid-100 tablet-grid-100 grid-100">I need to know it's really you, so when you select "Add Email" I am going to send a secret code to the email above.</p>
+                                <input type="submit" id="addEmailButton" value="Add Email" ng-disabled="!add_email_form.$valid" class="btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5">
+                            </div>
+                        </form>
+                        <div ng-show="emailAdded == true" class="mobile-grid-100 grid-parent">
+                            <form ng-submit="verifyEmail(email)">
+                               <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate top-mar10">
+                                    <input type="text" id="addEmailOtpText" required ng-model="email.otp_secret" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 form-control">
+                                    <label for="otp">Enter Otp:</label>
+                                </div>
+                                <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+                                    <input type="submit" id="verifyEmailButton" value="Verify Email" class="btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5">
+                                </div>
+                            </form>
+                            <form ng-submit="resendEmailOtp()">
+                                <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent top-pad20">
+                                    <input type="submit" id="resendEmailOtpButton" value="Pass it to me again" class="btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <!-- [END] Add New Email Block -->
+
+
+                </div>
+            </div>
+            <!-- email --> 
+
+            <!-- Phone section -->
+            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 grid-parent tablet-grid-90 tablet-prefix-5 tablet-suffix-5 border-bottom grid-80 prefix-10 suffix-10">
+                <div class="mobile-grid-100 grid-100 grid-parent">
+                    <div class="mobile-grid-60 tablet-grid-60 grid-60 grid-parent">Phone Numbers</div>
+                    <div class="mobile-grid-40 tablet-grid-40 grid-40 grid-parent" ng-click="phoneOpen = !phoneOpen" title="add phone" >
+                        <span id="expandPhoneButton" class="icon-add"></span>
+                    </div><br />
+                    <div id="phonePrincipalsDiv" ng-repeat="principal in principals">
+                        <div class="mobile-grid-100 grid-parent top-pad20" ng-show="principal.verified == true && principal.type == 'phone'">
+                            <div ng-show="$index + $parent.$index == 0 || display_phone_all_link == 'hide_all'" ng-repeat="method in principal.method" class="mobile-grid-100 tablet-grid-100 grid-100">
+                                <div class="mobile-grid-80 tablet-grid-80 grid-80 grid-parent">
+                                    <span>{{principal.name}} ({{method}})</span>
+                                </div>    
+                            </div>
+                            <div ng-show="display_phone_all_link == 'hide_all'">
+                                <div class="mobile-grid-50 tablet-grid-50 grid-50">
+                                    <a href="" ng-click="deletePhone(principal.name)" class="primary plain small">Delete phone</a>
+                                </div>
+                                <div class="btn-group mobile-grid-50 tablet-grid-50 grid-50">
+                                    <span class="small mobile-grid-60 tablet-grid-60 grid-60">Enable phone</span>
+                                    <div class="relative mobile-grid-40 tablet-grid-40 grid-40">
+                                        <input type="checkbox" ng-click="setPrincipalAvailability(principal, $event)" id="switch_{{principal.method}}{{$index}}" name="switch_{{principal.method}}{{$index}}" class="switch" ng-model="principal.enabled.method.type[$index]" ng-true-value="true" ng-false-value="false" ng-checked="principal.available" ng-disabled="principalsending" />
+                                        <label for="switch_{{principal.method}}{{$index}}">Enable</label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div ng-show="display_phone_all_link == 'show_all'">
+                        <span id="showAllPhoneButton" ng-click="togglePhoneDisplayLink()" class="small">Show All<span>
+                    </div>
+                    <div ng-show="display_phone_all_link == 'hide_all'">
+                        <span id="hideAllPhoneButton" ng-click="togglePhoneDisplayLink()" class="small">Hide All<span>
+                    </div>
+                    <div ng-controller="PhoneController" id="phoneController" collapse="phoneOpen" class="mobile-grid-100 grid-parent relative whitebox top-mar10">
+                        <form name="add_phone_form" ng-submit="addPhone(phone)">
+                            <div class="mobile-grid-100 grid-parent">
+                                <div class="messages result-error-value mobile-grid-100 tablet-grid-80 tablet-prefix-10 tablet-suffix-10 grid-80 prefix-10 suffix-10">
+                                    <p id="phoneErrorMessage" ng-show="principalUpdateMessage" ng-bind-html="principalUpdateMessage" class="error"></p>
+                                    <p id="phoneLengthMessage" translate class="error" ng-show="add_phone_form.phone.$error.maxlength">Phone number is too long</p>
+                                    <p id="phoneNumericMessage" translate class="error" ng-show="add_phone_form.phone.$error.pattern">Phone number must be numeric</p>
+                                    <p id="phoneInfoMessage" ng-show="info" class="info">D'oh! Did you forget which email you used before? No worries, try another one or try entering a phone number. I'll be right here.</p>
+                                </div>
+                                <div class="mobile-grid-100 tablet-grid-100 grid-100 validate">
+                                    <input type="text" id="phoneNumberText" required ng-pattern="/^[0-9]+$/i" ng-maxlength="24" ng-model="phone.principal" class="mobile-grid-100 tablet-grid-100 grid-100 form-control" name="phone">
+                                    <label for="phone" translate>Phone Number:</label>
+                                </div>
+                                <div class="mobile-grid-100 tablet-grid-100 grid-100 validate validate">
+                                    <div class="mobile-grid-80 tablet-grid-80 grid-50 grid-parent">
+                                        <input type="checkbox" id="sms" ng-model="phone.sms" name="sms" id="sms">
+                                        <label id="smsCheckbox" for="sms" class="showLabel">SMS</label>
+                                    </div>
+                                    <div class="mobile-grid-80 tablet-grid-80 grid-50 grid-parent">
+                                        <input type="checkbox" id="ivr" ng-model="phone.ivr" name="ivr" id="ivr" ng-init="phone.ivr=true" disabled>
+                                        <label id="ivrCheckbox" for="ivr" class="showLabel">IVR</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 validate validate">
+                                <p class="small">I need to know it's really you, so when you select "Add phone" I am going to send a secret code to the phone number above.</p>
+                                <input type="submit" id="addPhoneButton" value="Add Phone" class="btn primary mobile-grid-100 tablet-grid-100 grid-100" ng-disabled="!add_phone_form.$valid">
+                            </div>
+                        </form>
+                        <div ng-show="phoneAdded == true">
+                            <form ng-submit="verifyPhone(phone)">
+                                <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate top-mar10">
+                                    <input type="text" id="addOtpPhoneText" required ng-model="phone.otp_secret" class="mmobile-grid-100 tablet-grid-100 grid-100 form-control">
+                                    <label for="otp">Enter Otp:</label>
+                                </div>
+                                <div class="mobile-grid-100 grid-parent top-pad10">
+                                    <input type="submit" id="verifyPhoneButton" value="Verify Phone" class="btn primary mobile-grid-100 tablet-grid-100 grid-100">
+                                </div>
+                            </form>
+                            <form ng-submit="resendPhoneOtp()">
+                                <div class="mobile-grid-100 grid-parent top-pad20">
+                                    <input type="submit" id="resendPhoneOtpButton" value="Pass it to me again" class="btn primary mobile-grid-100 tablet-grid-100 grid-100">
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+
+                    
+                </div>
+            </div> 
+            <!-- phone -->  
+
+        	<!-- [START] Change Password -->
+            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 grid-parent tablet-grid-90 tablet-prefix-5 tablet-suffix-5 border-bottom grid-80 prefix-10 suffix-10">
+                <div class="mobile-grid-100 grid-100 grid-parent">
+                    <div class="mobile-grid-60 tablet-grid-60 grid-60 grid-parent">Password</div>
+                    <div class="mobile-grid-40 tablet-grid-40 grid-40 grid-parent" ng-click="passwordOpen = !passwordOpen" title="add password" >
+                        <span id="expandPasswordButton" class="icon-add"></span>
+                    </div><br />
+                    <div id="passwordController" collapse="passwordOpen" class="whitebox top-mar10">
+                        <form ng-submit="changePassword(password)" novalidate name="form">
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent relative top-mar10">
+                                <div class="result-error-value mobile-grid-95 mobile-suffix-5 tablet-grid-95 tablet-suffix-5 grid-85 prefix-5 suffix-10 messages">
+                                    <p id="passwordErrorMessage" ng-bind-html="messages" ng-show="messages" class="error"></p>
+                                    <p id="passwordCriteriaMessage" ng-hide="!focus || pwdValidity" class="input-help error mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+                                        <span class="large">Password must meet the following requirements:</span>
+                                        <span id="passwordLetterMessage" ng-class="pwdHasLetter" class="mobile-grid-50 tablet-grid-50 grid-50">At least <strong>one letter</strong></span>
+                                        <span id="passwordNumberMessage" ng-class="pwdHasNumber" class="mobile-grid-50 tablet-grid-50 grid-50">At least <strong>one number</strong></span>
+                                        <span id="passwordCapitalMessage" ng-class="pwdHasCapLetter" class="mobile-grid-50 tablet-grid-50 grid-50">At least <strong>one Capital Letter</strong></span>
+                                        <span id="passwordLengthMessage" ng-class="pwdValidLength" class="mobile-grid-50 tablet-grid-50 grid-50">At least <strong>8 characters long</strong></span>
+                                        <span id="passwordSpecialMessage" ng-class="pwdHasSpecial" class="mobile-grid-50 tablet-grid-50 grid-50">At least <strong>1 Special Character</strong></span>
+                                        <span id="passwordMatchMessage" ng-class="{valid: passwordMatch}" class="mobile-grid-50 tablet-grid-50 grid-50" ng-show="confirmShown">Fields must <strong>Match</strong></span>
+                                    </p>                            
+                                </div>
+                                <div class="mobile-grid-100 tablet-grid-100 grid-100 validate has-feedback">
+                                    <input type="password" 
+                                            class="mobile-grid-100 tablet-grid-100 grid-100 form-control"
+                                            id="oldPassword" name="oldPassword" minlength="8"
+                                            required ng-model="password.oldSecret" />
+                                    <label for="oldPassword">Existing Password</label>        
+                                </div>
+                                <div class="mobile-grid-100 tablet-grid-100 grid-100 validate has-feedback">
+                                    <input password-validate type="password" 
+                                            class="mobile-grid-100 tablet-grid-100 grid-100 form-control"
+                                            id="password" name="password" 
+                                            required ng-model="password.newSecret" 
+                                            data-password-verify="confirmPassword" ng-focus="focus=true;" ng-blur="focus=false;" />
+                                            <label for="password">Create New Password</label>
+                                            <i class="glyphicon glyphicon-remove form-control-feedback red" ng-hide="form.password.$valid || form.password.$pristine || focus"></i>
+                                            <i class="glyphicon glyphicon-ok form-control-feedback green" ng-hide="form.password.$invalid"></i>
+                                </div>
+                                <div class="mobile-grid-100 tablet-grid-100 grid-100 validate has-feedback">
+                                    <input password-validate type="password" 
+                                            class="mobile-grid-100 tablet-grid-100grid-100 form-control immediate-help no-border" 
+                                            id="confirmPassword" name="confirmPassword" 
+                                            required ng-model="password.confirmSecret" 
+                                            data-password-verify="password" ng-focus="focus=true;" ng-blur="focus=false;" />
+                                            <label for="confirmPassword">Confirm New Password</label>
+                                            <i class="glyphicon glyphicon-remove form-control-feedback red" ng-hide="form.confirmPassword.$valid || form.confirmPassword.$pristine || confirmfocus"></i>
+                                            <i class="glyphicon glyphicon-ok form-control-feedback green" ng-hide="form.confirmPassword.$invalid"></i>
+                                </div>
+                                <input type="hidden" id="passwordMatch" name="passwordMatch" ng-model="user.passMatch">
+                            </div>                
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 top-pad10">
+                                <input type="submit" id="changePasswordButton" class="btn primary mobile-grid-100 tablet-grid-100 grid-100" value="Change Password"  ng-disabled="(form.$valid&&updateProfileEnabled) ?  false : true"  />
+                                <input type="button" id="cancelChangePasswordButton" class="btn grey mobile-grid-100 tablet-grid-100 grid-100" value="Cancel" ng-click="cancelChangePassword()" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        	<!-- [END] Change Password -->
+
+            <!-- [START] Change Pin -->
+            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 grid-parent tablet-grid-90 tablet-prefix-5 tablet-suffix-5 border-bottom grid-80 prefix-10 suffix-10">
+                <div class="mobile-grid-100 grid-100 grid-parent">
+                    <div class="mobile-grid-60 tablet-grid-60 grid-60 grid-parent">Pin</div>
+                    <div class="mobile-grid-40 tablet-grid-40 grid-40 grid-parent" ng-click="pinOpen = !pinOpen" title="edit pin" >
+                        <span id="expandPinButton" class="icon-add"></span>
+                    </div><br />
+                    <div id="pinController" collapse="pinOpen" class="whitebox top-mar10">
+                        <form ng-submit="changePin(pin)" novalidate name="changePin">
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent relative top-mar10">
+                                <div class="mobile-grid-100 tablet-grid-100 grid-95 validate has-feedback">
+                                    <div class="result-error-value mobile-grid-95 mobile-suffix-5 tablet-grid-95 tablet-suffix-5 grid-85 prefix-5 suffix-10 messages">
+                                        <p id="pinErrorMessages" class="input-help error mobile-grid-100 tablet-grid-100 grid-100 grid-parent" ng-hide="changePin.confirmPin.$valid && changePin.createPin.$valid || changePin.confirmPin.$pristine || changePin.createPin.$pristine">
+                                            <span class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">Pin must meet the following requirements:</span>
+                                            <span id="pinMatchError" ng-class="{valid: changePin.confirmPin.$valid && changePin.createPin.$valid}" class="mobile-grid-50 tablet-grid-50 grid-50">Fields must <strong>Match</strong></span>
+                                        </p>
+                                    </div>
+                                </div>
+                                <div class="mobile-grid-100 tablet-grid-100 grid-100 validate has-feedback">
+                                    <input type="password" 
+                                            class="mobile-grid-100 tablet-grid-100grid-100 form-control"
+                                            id="oldPin" name="oldPin" minlength="4" maxlength="4"
+                                            required ng-model="user.oldSecretPin" />
+                                    <label for="oldPin">Existing Pin</label>        
+                                </div>
+                                <div class="mobile-grid-100 tablet-grid-100 grid-100 validate has-feedback">
+                                    <input numbersonly field-match type="password" 
+                                            class="mobile-grid-100 tablet-grid-100 grid-100 form-control"
+                                            id="createPin" name="createPin" 
+                                            required ng-model="user.secretPin"
+                                            minlength="4" maxlength="4"
+                                            data-match-input="confirmPin" />
+                                    <label for="createPin">Create New Pin</label>
+                                </div>
+                                <div class="mobile-grid-100 tablet-grid-100 grid-100 validate has-feedback">
+                                    <input numbersonly field-match type="password" 
+                                            class="mobile-grid-100 tablet-grid-100 grid-100 form-control immediate-help no-border" 
+                                            id="confirmPin" name="confirmPin" 
+                                            required ng-model="user.confirmSecretPin"
+                                            minlength="4" maxlength="4"
+                                            data-match-input="createPin" />
+                                    <label for="confirmPin">Confirm New Pin</label>
+                                </div>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 top-pad10">
+                                <input type="submit" id="changePinButton" class="btn primary mobile-grid-100 tablet-grid-100 grid-100" value="Change Pin"  ng-disabled="(changePin.$valid&&updateProfileEnabled) ?  false : true"  />
+                                <input type="button" id="cancelChangePinButton" class="btn grey mobile-grid-100 tablet-grid-100 grid-100" value="Cancel" ng-click="cancelChangePin()" />
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <!-- [END] Change Pin -->            
+            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 grid-parent tablet-grid-90 tablet-prefix-5 tablet-suffix-5 border-bottom grid-80 prefix-10 suffix-10 hide">
+            	<div>
+                	<span class="h1">Valid Native Clients:</span>
+            	</div>
+
+	            <div id="nativePrincipalsDiv" ng-repeat="principal in principals">
+	                <div ng-show="principal.verified == true && principal.type == 'totp'">
+	                    {{principal.name}}
+	                </div>
+	            </div>
+
+	            <div>
+	                <span class="h1">Persona</span>
+	            </div>
+	            <div id="personasDiv" ng-repeat="persona in personas">
+	                    <!-- need data to see which values to pull -->
+	            </div>
+
+
+	            <div>
+	                <span class="h1">Principal</span>
+	            </div>
+
+            
+        	</div>
+	        <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 grid-parent tablet-grid-90 tablet-prefix-5 tablet-suffix-5 border-bottom grid-80 prefix-10 suffix-10">
+	            <div class="mobile-grid-100 grid-100 grid-parent">
+	                <div class="mobile-grid-60 tablet-grid-60 grid-60 grid-parent">Name</div>
+	                <div class="mobile-grid-40 tablet-grid-40 grid-40 grid-parent" ng-click="nameOpen = !nameOpen" title="add name" >
+	                    <span id="expandNameButton" class="icon-add"></span>
+	                </div><br />
+	            </div>
+	            <div class="mobile-grid-100 grid-100">    
+	                <div class="mobile-grid-80 tablet-grid-80 grid-80 grid-parent">
+	                    {{profileValues.firstName}} {{profileValues.middleName}} {{profileValues.lastName}}
+	                </div>
+	            </div>
+	            <div class="mobile-grid-100 grid-parent grid-100 top-pad20" collapse="nameOpen">
+	                <div>{{ profileUpdateMessage }}</div>
+	                <form novalidate name="name_form" ng-submit="updateProfile(profile)" class="whitebox" id="name_form">
+	            	    <div class="result-error-value messages mobile-grid-100 tablet-grid-80 tablet-prefix-10 tablet-suffix-10 grid-80 prefix-10 suffix-10">
+	                        <p id="nameErrorMessage" ng-bind-html="messages" ng-show="name_form.messages" class="error"></p>
+	                        <p id="firstNameLengthMessage" translate class="error" ng-show="name_form.firstName.$error.maxlength">Your first name is too long</p>
+	                        <p id="firstNamePatternMessage" translate class="error" ng-show="name_form.firstName.$error.pattern">Your first name must be alphanumeric</p>
+	                        <p id="lastNameLengthMessage" translate class="error" ng-show="name_form.lastName.$error.maxlength">Your last name is too long</p>
+	                        <p id="lastNamePatternMessage" translate class="error" ng-show="name_form.lastName.$error.pattern">Your last name must be alphanumeric</p>
+	                        <p id="middleNameLengthMessage" translate class="error" ng-show="name_form.middleName.$error.maxlength">Your middle initial is too long</p>
+	                        <p id="middleNamePatternMessage" translate class="error" ng-show="name_form.middleName.$error.pattern">Your middle initial must be alphanumeric</p>
+	                    </div>
+	                    <div data-ng-repeat="attribute in profile.persona.attributes">
+	                        <div class="mobile-grid-100 tablet-grid-100 grid-100" ng-if="attribute.field_name == 'firstName'">
+	                            <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+	                                <input type="text" id="firstName" name="firstName" ng-pattern="/^[a-z0-9]+$/i" ng-maxlength="64" ng-model="attribute.value" class="form-control stretch-input">
+                                    <label ng-class="{empty:attribute.value == ''}" for="firstName">{{attribute.field_label}}</label>
+	                            </div>
+	                        </div>
+	
+	                        <div class="mobile-grid-100 tablet-grid-100 grid-100" ng-if="attribute.field_name == 'lastName'">
+	                            <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+	                                <input type="text" id="lastName" name="lastName" ng-pattern="/^[a-z0-9]+$/i" ng-maxlength="64" ng-model="attribute.value" class="form-control stretch-input">
+                                    <label ng-class="{empty:attribute.value == ''}" for="lastName">{{attribute.field_label}}</label>
+	
+	                            </div>
+	                        </div>
+	
+	                        <div class="mobile-grid-100 tablet-grid-100 grid-100" ng-if="attribute.field_name == 'middleName'">
+	                            <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+	                                <input type="text" id="middleName" name="middleName" ng-pattern="/^[a-z0-9]+$/i" ng-maxlength="1" ng-model="attribute.value" class="form-control stretch-input">
+                                    <label ng-class="{empty:attribute.value == ''}" for="middleName">{{attribute.field_label}}</label>
+	                            </div>
+	                        </div>
+	                    </div>
+	                    <div class="mobile-grid-100 tablet-grid-100 grid-100">
+	                        <input type="submit" id="updateNameButton" class="btn primary mobile-grid-100 tablet-grid-100 grid-100 top-mar20" value="Update Name" ng-disabled="(name_form.$valid&&updateProfileEnabled) ?  false : true" />
+	                    </div>
+	                </form>
+	            </div>
+	        </div>
+	        <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 grid-parent tablet-grid-90 tablet-prefix-5 tablet-suffix-5 border-bottom grid-80 prefix-10 suffix-10">
+	            <div class="mobile-grid-100 grid-100 grid-parent">
+	                <div class="mobile-grid-60 tablet-grid-60 grid-60 grid-parent">Address</div>
+	                <div class="mobile-grid-40 tablet-grid-40 grid-40 grid-parent" ng-click="addressOpen = !addressOpen" title="add address" >
+	                    <span id="expandAddressButton" class="icon-add"></span>
+	                </div><br />
+	                <div class="mobile-grid-100 grid-100" ng-show="profileValues.addressLine1 != '' || profileValues.addressLine2 != '' || profileValues.addressCity != '' || profileValues.addressState != '' || profileValues.addressZip != '' || profileValues.addressCountry != ''">
+	                    <div class="mobile-grid-80 tablet-grid-80 grid-80 grid-parent">
+	                        {{profileValues.addressLine1}} {{profileValues.addressLine2}}<br />
+	                        {{profileValues.addressCity}}
+	                        <span ng-show="showAddressComma()">,</span>
+	                        {{profileValues.addressState}} {{profileValues.addressZip}}<br />
+	                        {{profileValues.addressCountry}}
+	                    </div>
+	    <!--                 <div class="btn-group mobile-grid-20 tablet-grid-20 grid-20" ng-show="profileValues.addressLine1 != '' || profileValues.addressLine2 != '' || profileValues.addressCity != '' || profileValues.addressState != '' || profileValues.addressZip != '' || profileValues.addressCountry != ''">
+	                        <input type="checkbox" ng-click="setPrincipalAvailability(principal, $event)" id="{{profileValues.addressLine1}}{{profileValues.addressLine2}}" name="{{profileValues.addressLine1}}{{profileValues.addressLine2}}" class="switch" />
+	                        <label for="{{profileValues.addressLine1}}{{profileValues.addressLine2}}">First</label>
+	                    </div> -->
+	                </div>
+	                <div collapse="addressOpen" class="grid-100 grid-parent top-mar10">
+	                    <div>{{ profileUpdateMessage }}</div>
+	                    <form novalidate name="address_form" ng-submit="updateProfile(profile)" class="whitebox top-pad20" id="address_form">
+	                        <div class="result-error-value messages mobile-grid-100 tablet-grid-80 tablet-prefix-10 tablet-suffix-10 grid-80 prefix-10 suffix-10">
+	                            <p id="addressErrorMessage" ng-bind-html="messages" ng-show="address_form.messages" class="error"></p>
+	                            <p id="address1LengthMessage" translate class="error" ng-show="address_form.addressLine1.$error.maxlength">Your address1 is too long</p>
+	                            <p id="address1PatternMessage" translate class="error" ng-show="address_form.addressLine1.$error.pattern">Your address1 must be alphanumeric</p>
+	                            <p id="address2LengthMessage" translate class="error" ng-show="address_form.addressLine2.$error.maxlength">Your address2 is too long</p>
+	                            <p id="address2PatternMessage" translate class="error" ng-show="address_form.addressLine2.$error.pattern">Your address2 must be alphanumeric</p>
+	                            <p id="cityLengthMessage" translate class="error" ng-show="address_form.addressCity.$error.maxlength">Your city is too long</p>
+	                            <p id="cityPatternMessage" translate class="error" ng-show="address_form.addressCity.$error.pattern">Your city must be alphanumeric</p>
+	                            <p id="zipCodeLengthMessage" translate class="error" ng-show="address_form.addressZip.$error.maxlength">Your zip code is too long</p>
+	                            <p id="zipCodePatternMessage" translate class="error" ng-show="address_form.addressZip.$error.pattern">Your zip code must be alphanumeric</p>
+	                        </div>
+	                        <div id="addressAttributeDiv" data-ng-repeat="attribute in profile.persona.attributes">
+	                            <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent" ng-if="attribute.field_name == 'addressLine1'">
+	                                <div class="mobile-grid-100 tablet-grid-100 grid-100">
+	                                    <input type="text" id="addressLine1Text" name="addressLine1" ng-pattern="/^[a-z0-9' ']+$/i" ng-maxlength="64" ng-model="attribute.value" class="form-control stretch-input">
+                                        <label ng-class="{empty:attribute.value == ''}" for="address1">{{attribute.field_label}}</label>
+	                                </div>
+	                            </div>
+	
+	                            <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent" ng-if="attribute.field_name == 'addressLine2'">
+	                                <div class="mobile-grid-100 tablet-grid-100 grid-100">
+	                                    <input type="text" id="addressLine2Text" name="addressLine2" ng-pattern="/^[a-z0-9' ']+$/i" ng-maxlength="64" ng-model="attribute.value" class="form-control stretch-input">
+                                        <label ng-class="{empty:attribute.value == ''}" for="addressLine2">{{attribute.field_label}}</label>
+	                                </div>
+	                            </div>
+	
+	                            <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent" ng-if="attribute.field_name == 'addressCity'">
+	                                <div class="mobile-grid-100 tablet-grid-100 grid-100">
+	                                    <input type="text" id="addressCityText" name="addressCity" ng-pattern="/^[a-z0-9' ']+$/i" ng-maxlength="64" ng-model="attribute.value" class="form-control stretch-input">
+                                        <label ng-class="{empty:attribute.value == ''}" for="addressCity">{{attribute.field_label}}</label>
+	                                </div>
+	                            </div>
+	
+	                            <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent" ng-if="attribute.field_name == 'addressState'">
+	                                <div class="mobile-grid-100 tablet-grid-100 grid-100">
+	                                    <input type="text" id="addressStateText" name="addressState" ng-model="attribute.value" class="form-control stretch-input">
+                                        <label ng-class="{empty:attribute.value == ''}" for="addressState">{{attribute.field_label}}</label>
+	                                </div>
+	                            </div>
+	
+	                            <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent" ng-if="attribute.field_name == 'addressCountry'">
+	                                <div class="mobile-grid-100 tablet-grid-100 grid-100">
+	                                    <input type="text" id="addressCountryText" name="addressCountry" ng-model="attribute.value" class="form-control stretch-input">
+                                        <label ng-class="{empty:attribute.value == ''}" for="addressCountry">{{attribute.field_label}}</label>
+	                                </div>
+	                            </div>
+	
+	                            <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent" ng-if="attribute.field_name == 'addressZip'">
+	                                <div class="mobile-grid-100 tablet-grid-100 grid-100">
+	                                    <input type="text" id="addressZipText" name="addressZip" ng-pattern="/^[a-z0-9' ']+$/i" ng-maxlength="16" ng-model="attribute.value" class="form-control stretch-input">
+                                        <label ng-class="{empty:attribute.value == ''}" for="addressZip">{{attribute.field_label}}</label>
+	                                </div>
+	                            </div>
+	                        </div>
+	                        <div class="mobile-grid-100 tablet0grid-100 grid-100">
+	                            <input type="submit" id="updateAddressButton" class="btn primary mobile-grid-100 tablet-grid-100 grid-100 top-mar20" value="Update Address" ng-disabled="(address_form.$valid&&updateProfileEnabled) ?  false : true" />
+	                        </div>
+	                    </form>
+	                </div>
+	            </div>
+	        </div>
+
+	        <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 grid-parent tablet-grid-90 tablet-prefix-5 tablet-suffix-5 border-bottom grid-80 prefix-10 suffix-10">
+	            <div class="mobile-grid-100 grid-100 grid-parent">
+	                <div class="mobile-grid-60 tablet-grid-60 grid-60 grid-parent">SSN</div>
+	                <div class="mobile-grid-40 tablet-grid-40 grid-40 grid-parent" ng-click="ssnOpen = !ssnOpen" title="add SSN" >
+	                    <span id="expandSSNButton" class="icon-add"></span>
+	                </div><br />
+	                <div class="mobile-grid-100 tablet-grid-100 grid-100" ng-show="profileValues.ssn != ''">
+	                    <div class="mobile-grid-80 tablet-grid-80 grid-80 grid-parent">
+	                        {{profileValues.ssn}}
+	                    </div>
+	                    <!-- <div class="btn-group mobile-grid-20 tablet-grid-20 grid-20" ng-show="profileValues.ssn != ''">
+	                        <input type="checkbox" ng-click="setPrincipalAvailability(principal, $event)" id="{{profileValues.ssn}}" class="switch" />
+	                        <label for="{{profileValues.ssn}}">First</label>
+	                    </div> -->
+	                </div>
+	                <div collapse="ssnOpen" class="grid-100 grid-parent top-mar10">
+	                    <div>{{ profileUpdateMessage }}</div>
+	                    <form novalidate name="ssn_form" ng-submit="updateProfile(profile)" class="whitebox top-pad20" id="ssn_form">
+	                        <div class="result-error-value messages mobile-grid-100 tablet-grid-80 tablet-prefix-10 tablet-suffix-10 grid-80 prefix-10 suffix-10">
+	                            <p id="ssnErrorMessage" ng-bind-html="messages" ng-show="ssn_form.messages" class="error"></p>
+	                            <p id="ssnPatternMessage" translate class="error" ng-show="ssn_form.ssn.$error.pattern">Your SSN must be numeric</p>
+	                            <p id="ssnLengthMessage" translate class="error" ng-show="ssn_form.ssn.$error.maxlength || ssn_form.ssn.$error.minlength">Your SSN must be 4 digits</p>
+	                        </div>
+	                        <div id="ssnAttributesDiv" data-ng-repeat="attribute in profile.persona.attributes">
+	                            <div class="mobile-grid-100 tablet-grid-100 grid-100" ng-if="attribute.field_name == 'ssn'">
+	                                <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+	                                    <input type="text" id="ssn" name="ssn" ng-pattern="/^[0-9]+$/i" ng-maxlength="4" ng-model="attribute.value" class="form-control stretch-input">
+                                        <label ng-class="{empty:attribute.value == ''}" for="ssn">{{attribute.field_label}}</label>
+	                                </div>
+	                            </div>
+	                        </div>
+	                        <div class="mobile-grid-100 tablet-grid-100 grid-100">
+	                            <input type="submit" id="updateSSNButton" class="btn primary mobile-grid-100 tablet-grid-100 grid-100 top-mar20" value="Update SSN" ng-disabled="(ssn_form.$valid&&updateProfileEnabled) ?  false : true" />
+	                        </div>
+	                    </form>
+	                </div>
+	            </div>
+	        </div>
+	
+	        <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 grid-parent tablet-grid-90 tablet-prefix-5 tablet-suffix-5 border-bottom grid-80 prefix-10 suffix-10">
+	            <div class="mobile-grid-100 grid-100 grid-parent">
+	                <div class="mobile-grid-60 tablet-grid-60 grid-60 grid-parent">Birth Info</div>
+	                <div class="mobile-grid-40 tablet-grid-40 grid-40 grid-parent" ng-click="birthOpen = !birthOpen" title="add Birth Info" >
+	                    <span id="expandBirthInfoButton" class="icon-add"></span>
+	                </div><br />
+	                <div class="mobile-grid-100 grid-100" ng-show="profileValues.countryOfBirth != '' || profileValues.stateOfBirth != '' || profileValues.birthDate != ''">
+	                    <div class="mobile-grid-80 tablet-grid-80 grid-80 grid-parent">
+	                        {{profileValues.birthDate}}<br />
+	                        {{profileValues.stateOfBirth}}<br />
+	                        {{profileValues.countryOfBirth}}
+	                    </div>
+	                </div>
+	                <div collapse="birthOpen" class="grid-100 grid-parent top-mar10">
+	                    <div>{{ profileUpdateMessage }}</div>
+	                    <form novalidate name="birth_form" ng-submit="updateProfile(profile)" class="whitebox" id="birth_form">
+	                        <div class="result-error-value messages mobile-grid-100 tablet-grid-80 tablet-prefix-10 tablet-suffix-10 grid-80 prefix-10 suffix-10">
+	                            <p id="birthErrorMessage" ng-bind-html="messages" ng-show="birth_form.messages" class="error"></p>
+	                            <p id="birthCountryLengthMessage" translate class="error" ng-show="birth_form.countryOfBirth.$error.maxlength">Your country of birth is too long</p>
+	                            <p id="birthStateLengthMessage" translate class="error" ng-show="birth_form.stateOfBirth.$error.maxlength">Your middle name is too long</p>
+	                            <p id="birthDateLengthMessage" translate class="error" ng-show="birth_form.birthDate.$error.maxlength">Your date of birth is too long</p>
+	                            <p id="birthDatePatternMessage" translate class="error" ng-show="birth_form.birthDate.$error.pattern">Your date of birth must be numeric</p>
+	                        </div>
+	                        <div id="birthAttributesDiv" data-ng-repeat="attribute in profile.persona.attributes">
+	                            <div class="mobile-grid-100 tablet-grid-100 grid-100" ng-if="attribute.field_name == 'countryOfBirth'">
+	                                <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+	                                    <input type="text" id="countryOfBirthText" name="countryOfBirth" ng-maxlength="100" ng-model="attribute.value" class="form-control stretch-input">
+                                        <label ng-class="{empty:attribute.value == ''}" for="countryofbirth">{{attribute.field_label}}</label>
+	                                </div>
+	                            </div>
+	                            <div class="mobile-grid-100 tablet-grid-100 grid-100" ng-if="attribute.field_name == 'stateOfBirth'">
+	                                <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+	                                    <input type="text" id="stateOfBirthText" name="stateOfBirth" ng-maxlength="100" ng-model="attribute.value" class="form-control stretch-input">
+                                        <label ng-class="{empty:attribute.value == ''}" for="stateofbirth">{{attribute.field_label}}</label>
+	                                </div>
+	                            </div>
+	                            <div class="mobile-grid-100 tablet-grid-100 grid-100" ng-if="attribute.field_name == 'birthDate'">
+	                                <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+	                                    <input type="text" id="birthDateText" name="birthDate" ng-pattern="/^[0-9-]+$/i" ng-maxlength="10" ng-model="attribute.value" class="form-control stretch-input">
+                                        <label ng-class="{empty:attribute.value == ''}" for="birthDate">{{attribute.field_label}} (yyyy-mm-dd)</label>
+	                                </div>
+	                            </div>
+	                        </div>
+	                        <div class="mobile-grid-100 tablet-grid-100 grid-100">
+	                            <input type="submit" id="updateBirthInfoButton" class="btn primary mobile-grid-100 tablet-grid-100 grid-100 top-mar20" value="Update Birth Info" ng-disabled="(birth_form.$valid&&updateProfileEnabled) ?  false : true" />
+	                        </div>
+	                    </form>
+	                </div>
+	            </div>
+	        </div>
+	    </div>
+    </div>
+    
+    <div ng-show="profileRendered && principalsRendered" class="grid-35 suffix-5 ng-cloak">
+        <div class="mobile-grid-100 grid-parent top-pad20">
+            <div class="grid-100 grid-parent">
+                <h1>History</h1>
+            </div>
+        </div>
+
+        <div id="userHistoryDiv" data-ng-repeat="item in userHistory">
+        	<div class="profile grid-100 grid-parent top-pad20 bottom-pad20 bottom-mar15 overflow-hidden">
+            	<div class="corner-ribbon top-right">New</div>
+            	<div class="mobile-grid-100 grid-100">
+    	            <div class="mobile-grid-35 tablet-grid-35 grid-35">
+    	                <img src="//placehold.it/100x100" class="circular">
+    	            </div>
+    	            <div class="mobile-grid-65 tablet-grid-65 grid-65">
+    	                <h3 class="top-mar0">{{item.persona_label}}</h3>
+    	                <p class="grid-80 grid-parent">
+                            <span class="small grid-100 grid-parent"><strong>created:</strong> {{item.persona_createdDate}} at {{item.persona_createdTime}}</span>
+    	                    <span class="small"><strong>Last login:</strong> {{item.createdDate}} at {{item.createdTime}}</span>
+    	                </p>
+    	            </div>
+    	        </div>
+    	    </div>
+    	</div>
+    	<div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+            <a id="showAllHistoryLink" class="btn primary mobile-grid-100 tablet-grid-100 grid-100 top-mar10" href="#/history">Show All</a>
+        </div>
+	</div>
+</div>
+
+<ng-include src="includes.footer"> </ng-include>

@@ -1,0 +1,17 @@
+<ng-include src="includes.header"> </ng-include>
+
+<div class="grid-container">
+    <div class="mobile-grid-100 grid-parent top-pad20">
+        <div class="grid-25 grid-parent">
+            <a id="userSearchButton" href="#/usersearch">User Search</a>
+        </div>
+        <div ng-show="RoleUtility.superUser" class="grid-25 grid-parent">
+            <a id="createRpButton" href="#/createrp">Create Relying Party</a>
+        </div>
+        <div ng-show="RoleUtility.admin" class="grid-25 grid-parent">
+            <a id="searchRpButton" href="#/searchrp">Relying Party Search</a>
+        </div>
+    </div>
+</div>
+
+<ng-include src="includes.footer"> </ng-include>

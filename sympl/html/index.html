@@ -1,0 +1,68 @@
+<!doctype html>
+<html lang="en" ng-app="symplApp">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Zentry</title>
+
+
+    <link rel="stylesheet" type="text/css" href="{{APP_ROOT}}/applications/authentication/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="{{APP_ROOT}}/applications/authentication/css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" type="text/css" href="{{APP_ROOT}}/applications/authentication/css/jquery-ui-1.10.4.min.css" />
+    <link rel="stylesheet" type="text/css" href="{{APP_ROOT}}/applications/authentication/css/unsemantic-grid-desktop-no-ie7.css" />
+    <link rel="stylesheet" type="text/css" href="{{APP_ROOT}}/applications/authentication/css/ui-bootstrap-csp.css" />
+    <link rel="stylesheet" type="text/css" href="{{APP_ROOT}}/applications/authentication/css/sympl.css" />
+    <link rel="stylesheet" type="text/css" href="{{APP_ROOT}}/applications/authentication/css/dragndrop.css" />
+</head>
+<body class='ng-cloak'>
+    <div class="view-container" class='ng-cloak'>
+        <div ng-view data-autoscroll class='ng-cloak'></div>
+    </div>
+
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/jquery-1.11.1.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/jquery-ui-1.10.4.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/angular.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/angular-route.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/angular-resource.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/angular-cookies.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/ui-bootstrap.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/modernizr.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/angular-gettext.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/angular-ui-router.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/require-2.1.15.min.js"></script>
+    <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.10.0.js"></script>
+    <!-- shim is needed to support non-HTML5 FormData browsers (IE8-9)-->
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/ng-file-upload-shim.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/ng-file-upload.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/ng-img-crop.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/sortable.js"></script>
+
+    <script src="{{APP_ROOT}}/applications/authentication/js/services.js"></script>
+    <script src="{{APP_ROOT}}/applications/sympl/js/app.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/directives.js"></script>    
+    <script src="{{APP_ROOT}}/applications/sympl/js/controllers/controller.js"></script>
+    <script src="{{APP_ROOT}}/applications/sympl/js/controllers/emailController.js"></script>
+    <script src="{{APP_ROOT}}/applications/sympl/js/controllers/phoneController.js"></script>
+    <script src="{{APP_ROOT}}/applications/sympl/js/controllers/relyingPartyController.js"></script>
+    <script src="{{APP_ROOT}}/applications/sympl/js/controllers/relyingPartyTemplate.js"></script>
+    <script src="{{APP_ROOT}}/applications/sympl/js/controllers/editRelyingPartyController.js"></script>
+    <script src="{{APP_ROOT}}/applications/sympl/js/controllers/relyingPartyAdminController.js"></script>
+    <script src="{{APP_ROOT}}/applications/sympl/js/controllers/adminController.js"></script>
+    <script src="{{APP_ROOT}}/applications/sympl/js/controllers/userSearchController.js"></script>
+    <script src="{{APP_ROOT}}/applications/sympl/js/controllers/profileController.js"></script>
+    <script src="{{APP_ROOT}}/applications/sympl/js/controllers/transactionController.js"></script>
+    <script src="{{APP_ROOT}}/applications/sympl/js/controllers/transactionHistoryController.js"></script>
+    <script src="{{APP_ROOT}}/applications/sympl/js/controllers/personaController.js"></script>
+    <script src="{{APP_ROOT}}/applications/sympl/js/controllers/relyingPartyPersonaTemplateController.js"></script>
+    <script src="{{APP_ROOT}}/applications/sympl/js/controllers/HeaderController.js"></script>
+    <script src="{{APP_ROOT}}/applications/sympl/js/services.js"></script>
+
+
+    <script type="text/javascript">
+        APP_ROOT = '{{APP_ROOT}}';
+        ADMIN_API_CONTEXT = '{{ADMIN_API_CONTEXT}}';
+        API_CONTEXT = '{{API_CONTEXT}}';
+		BOOM_URL = '{{BOOM_URL}}';
+    </script>
+</body>
+</html>

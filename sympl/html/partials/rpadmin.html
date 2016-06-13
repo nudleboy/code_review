@@ -1,0 +1,98 @@
+<ng-include src="includes.header"> </ng-include>
+
+<div class="grid-container">
+    <div id="displayContentDiv" class="grid-100 prefix-5">
+
+        <div class="profile grid-100 grid-parent top-pad20">
+            <div class="mobile-grid-20 tablet-grid-20 grid-20">
+                <img ng-if="relyingParty.rp_logo_img_type" ng-src="data:image/{{relyingParty.rp_logo_img_type}};base64,{{relyingParty.rp_logo_img}}" height="175" width="175" class="circular">
+                <span ng-if="!relyingParty.rp_logo_img_type">
+                    No Logo
+                </span>
+            </div>
+            <div class="mobile-grid-20 tablet-grid-20 grid-20">
+                <select ng-change="updateSelectedRP(selectedRP)" ng-model="selectedRP" ng-if="uniqueRoles.length > 1">
+                    <option ng-repeat="role in uniqueRoles" value="{{role.rp_uuid}}" >{{role.role_name}}</option>
+                </select>
+                {{relyingParty.name}}
+            </div>
+            <div class="mobile-grid-20 tablet-grid-20 grid-20">
+                <a class="plain" id="adminLink" href="#/searchrp">Search Relying Party</a>
+            </div>
+            <div ng-show="RoleUtility.showCreateRPLink" class="mobile-grid-20 tablet-grid-20 grid-20">
+                <a class="plain" id="adminLink" href="#/createrp">Create Relying Party</a>
+            </div>
+        </div>
+
+        <div class="grid-100 prefix-5">
+            <div class="profile grid-100 grid-parent top-pad20">
+                <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 grid-parent tablet-grid-90 tablet-prefix-5 tablet-suffix-5 grid-80 prefix-10 suffix-10">
+                    <div class="mobile-grid-100 grid-parent top-mar20">
+                        User Search
+                    </div>
+                    <div class="mobile-grid-100 grid-parent top-mar20">
+                        <div class="grid-50 grid-parent ">
+                            <select name="rolepermissions" ng-model="selectedRole" class="mobile-grid-100 tablet-grid-100 grid-100 form-control">
+                                <option ng-repeat="role in rolepermissions" value="{{role.name}}">
+                                    {{role.name}}
+                                </option>
+                            </select>
+                        </div>
+                        <div class="grid-50 grid-parent left-pad20">
+                            <input type="button" id="roleSearchButton" ng-click="searchUserByRole()" value="Search By Roles" class="btn primary mobile-grid-100 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 grid-100 pad10">
+                        </div>
+                    </div>
+
+                    <div class="mobile-grid-100 grid-parent top-mar20 border-bottom">
+                        <div class="grid-50 grid-parent">
+                            <input type="text" id="principalSearchText" placeholder="Enter Principal" ng-model="principalSearch" class="form-control stretch-input">
+                        </div>
+                        <div class="grid-50 grid-parent left-pad20">
+                            <input type="button" id="roleSearchButton"  ng-click="searchByPrincipal()" value="Search By Principal" class="btn primary mobile-grid-100 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 grid-100">
+                        </div>
+                    </div>
+                    <div class="mobile-grid-100 grid-parent top-mar20 bottom-mar20" ng-if="searchResultMessage">
+                        {{searchResultMessage}}
+                    </div>
+
+                    <div class="mobile-grid-100 grid-parent top-mar20" ng-if="users">
+                        Search Results: {{searchResultsNumber}}
+                    </div>
+                    <div class="mobile-grid-100 grid-parent top-mar20" ng-if="users">
+                        <div class="grid-25">
+                            <span class="{{emailSortClass}}" ng-click="changeSort('email')">Primary Email</span>
+                        </div>
+                        <div class="grid-25">
+                            <span class="{{roleSortClass}}" ng-click="changeSort('roles')">Roles</span>
+                        </div>
+                        <div class="grid-25">
+                            Link to Profile
+                        </div>
+                        <div class="grid-25" ng-if="canAssignRoles">
+                            Select
+                        </div>
+                    </div>
+                    <div class="mobile-grid-100 grid-parent top-mar20" ng-if="users" ng-repeat="user in users">
+                        <div class="grid-25">
+                            {{user.primaryemail}}&nbsp;
+                        </div>
+                        <div class="grid-25">
+                            <select >
+                                <option data-ng-repeat="role in user.allroles" value="{{role}}">{{role.name}} - {{role.rp_name}}</option>
+                            </select>
+                        </div>
+                        <div class="grid-25">
+                            <a href="#">Profile</a>
+                        </div>
+                        <div class="grid-25" ng-if="canAssignRoles">
+                            <input type="checkbox" class='visible-checkbox' id="user_checkbox_{{$index}}" ng-click="toggleRoleAssignmentButtons()">
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-include src="includes.footer"> </ng-include>

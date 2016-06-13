@@ -1,0 +1,58 @@
+
+	<div class="profile grid-100 grid-parent top-pad20 bottom-pad20 bottom-mar15 overflow-hidden">
+		<h2>Create a Custom Attribute</h2>
+		<div>{{ addCustomAttributeMessage }}</div>
+		<form id="customAttributeForm" name="customAttributeForm" novalidate ng-submit="saveCustomAttribute(attribute)" ng-model="attribute"
+			 class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 border-bottom grid-80 prefix-10 suffix-10 grid-parent">
+			<div id="customAttributeMessagesDiv" class="result-error-value messages mobile-grid-100 tablet-grid-80 tablet-prefix-10 tablet-suffix-10 grid-80 prefix-10 suffix-10">
+				<!-- TODO: add messages -->
+			</div>
+			<div class="mobile-grid-100 tablet-grid-100 grid-100">
+				<div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+					<input type="text" id="field_label" required
+						   ng-model="attribute.field_label"
+						   class="form-control stretch-input"
+						   ng-blur="generateFieldName()"
+						   ng-trim="true">
+					<label for="field_label">Field Label</label>
+				</div>
+			</div>
+			<div class="mobile-grid-100 tablet-grid-100 grid-100">
+				<div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+					<input type="text" id="field_name" required
+						   ng-model="attribute.field_name"
+						   class="form-control stretch-input"
+						   ng-blur="validateFieldLabel()"
+						   ng-trim=true>
+					<label for="field_name">Field Name</label>
+				</div>
+			</div>
+			<div class="mobile-grid-100 tablet-grid-100 grid-100">
+				<div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+					<div>Data Type</div>
+					<div>
+						<select id="dataTypeSelect" ng-model="attribute.data_type"
+						        ng-init="attribute.data_type = attribute.data_type || attributeDataTypes[0].value"
+						        ng-options="option.value as option.display for option in attributeDataTypes"
+						        ng-change="setNewAttrInputOptions()">
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="mobile-grid-100 tablet-grid-100 grid-100">
+				<div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+					<div>Input Type</div>
+					<div>
+						<select id="inputTypeSelect" ng-model="attribute.input_type"
+						        ng-init="attribute.input_type = attribute.input_type || attributeInputByDataType[attribute.data_type][0].value"
+						        ng-options="option.value as option.display for option in attributeInputByDataType[attribute.data_type]">
+						</select>
+					</div>
+				</div>
+			</div>
+			<div class="mobile-grid-100 tablet-grid-100 grid-100">
+                   <input type="submit" id="saveCustomAttributeButton" class="btn primary mobile-grid-100 tablet-grid-100 grid-100 top-mar20"
+                   		value="Save" ng-disabled="customAttributeForm.$invalid || customAttributeForm.field_label.$pristine || customAttributeForm.field_name.$pristine" />
+               </div>
+		</form>	
+	</div>

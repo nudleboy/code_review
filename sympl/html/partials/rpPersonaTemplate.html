@@ -1,0 +1,136 @@
+<header class='ng-cloak'>
+    <a href="{{APP_ROOT}}" id="logoHeaderLink"></a>
+    <nav>
+        <a href="#" id="menuIconId"></a>
+        <ul>
+            <li>
+                <span id="logoutButton" ng-click="logout()">Logout</span>
+            </li>
+            <li ng-show="showAdminLink">
+                <span id="adminButton" ng-click="loadAdminPage()">Admin</span>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<div ng-bind="generalMessage"></div>
+
+<div ng-show="!dataLoaded()" class="grid-100 center top-pad20">
+    <i id="loadingSpinner" class="fa fa-spinner fa-pulse" style="font-size: 10em"></i>
+</div>
+
+<div ng-show="dataLoaded()" class="simpleDemo">
+	<div class="mobile-grid-50">
+		<div class="row">
+			<div class="panel panel-info">
+				<h3>Persona</h3>
+				<div class="panel-body">
+					<ul>
+						<li>
+							<div class="mobile-grid-100">
+						        <span class="col-md-2">Field Label</span>
+						        <span class="col-md-2">Field Name</span>
+						        <span class="col-md-2">Data Type</span>
+						        <span class="col-md-2">Input Type</span>
+						        <span class="col-md-1">Required</span>
+						        <span class="col-md-1">User Provided</span>
+						        <span class="col-md-1">Hidden</span>
+					       	</div>
+						</li>					
+					</ul>
+					<ul id="targetList"
+					 	ui-sortable="sortableOptions"
+					 	ng-model="models.lists.persona"
+						ng-class="{'minimalList': personaEmpty()}"
+					 	class="connector">
+						<li ng-repeat="item in models.lists.persona"
+					        class="attributeItem"
+					        ng-class="{'selected': models.selected === item}"
+					        ng-mousedown="itemGrabEvent(item, $index, 'persona')">
+					        <div class="mobile-grid-100">
+						        <span class="col-md-2">{{item.field_label}}</span>
+						        <span class="col-md-2">{{item.field_name}}</span>
+						        <span class="col-md-2">
+						        	<select id="data_type_select_{{$index}}" ng-model="item.data_type"
+						        			ng-init="item.data_type = item.data_type || attributeDataTypes[0].value"
+						        			ng-options="option.value as option.display for option in attributeDataTypes"
+						        			ng-change="setInputOptions(this)">
+						        	</select>
+						        </span>
+						        <span class="col-md-2">
+						        	<select id="input_type_select_{{$index}}" ng-model="item.input_type"
+						        			ng-init="item.input_type = item.input_type || attributeInputByDataType[item.data_type][0].value"
+						        			ng-options="option.value as option.display for option in attributeInputByDataType[item.data_type]">
+						        	</select>
+						        </span>
+						        <span class="col-md-1">
+						        	<input type="checkbox" id="required_{{$index}}" class="switch" ng-model="item.required" ng-checked="item.required" ng-disabled="false">
+						        	<label for="required_{{$index}}" ng-click="attrChange(this)">{{item.field_label}}</label>
+						        </span>
+						        <span class="col-md-1">
+						        	<input type="checkbox" id="user_provided_{{$index}}" class="switch" ng-model="item.user_provided" ng-checked="item.user_provided" ng-disabled="false">
+						        	<label for="user_provided_{{$index}}" ng-click="attrChange(this)">{{item.field_label}}</label>
+						        </span>
+						        <span class="col-md-1">
+						        	<input type="checkbox" id="hidden_{{$index}}" class="switch" ng-model="item.hidden" ng-checked="item.hidden" ng-disabled="false">
+						        	<label for="hidden_{{$index}}" ng-click="attrChange(this)">{{item.field_label}}</label>
+						        </span>								   
+					       	</div>
+					    </li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		<div class="row">
+			<div class="panel panel-info">
+				<h3>Available Attributes</h3>
+				<span>Search: <input ng-model="search.field_name"></span>
+				<input type="button" id="addAttributeButton" ng-click="addAttributeClick()" value="Add Custom Attribute" class="btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5">
+				<div class="panel-body">
+					<ul>
+						<li>
+							<div class="mobile-grid-100">
+						        <span class="col-md-2">Field Label</span>
+						        <span class="col-md-2">Field Name</span>
+						        <span class="col-md-2">Data Type</span>
+						        <span class="col-md-2">Input Type</span>
+					       	</div>
+						</li>					
+					</ul>
+					<ul id="sourceList"
+						ui-sortable="sortableOptions"
+						ng-model="models.lists.attrdefs"
+						ng-class="{'minimalList': attrDefsEmpty()}"
+						class="connector">
+						<li ng-repeat="item in models.lists.attrdefs | filter:search:strict"
+					        class="attributeItem"
+					        ng-class="{'selected': models.selected === item}"
+					        ng-mousedown="itemGrabEvent(item, $index, 'attrdefs')">
+					        <div class="mobile-grid-100">
+						        <span class="col-md-2">{{item.field_label}}</span>
+						        <span class="col-md-2">{{item.field_name}}</span>
+						        <span class="col-md-2">
+						        	<select id="data_type_select_{{$index}}" ng-model="item.data_type"
+						        			ng-init="item.data_type = item.data_type || attributeDataTypes[0].value"
+						        			ng-options="option.value as option.display for option in attributeDataTypes"
+						        			ng-disabled="item.rp_uuid != rpId"
+						        			ng-change="setInputOptions(this)">
+						        	</select>
+						        </span>
+						        <span class="col-md-2">
+						        	<select id="input_type_select_{{$index}}" ng-model="item.input_type"
+						        			ng-init="item.input_type = item.input_type || attributeInputByDataType[item.data_type][0].value"
+						        			ng-options="option.value as option.display for option in attributeInputByDataType[item.data_type]"
+						        			ng-disabled="item.rp_uuid != rpId">
+						        	</select>
+						        </span>
+					       	</div>
+					    </li>
+					</ul>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+
+<div ui-view="modal" autoscroll="false"></div>

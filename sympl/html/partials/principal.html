@@ -1,0 +1,112 @@
+<ng-include src="includes.header"> </ng-include>
+
+<div id="generalMessage">{{generalMessage}}</div>
+
+<div class="grid-50 prefix-5">
+    <div class="profile grid-100 grid-parent top-pad20">
+        <!-- Email section -->
+        <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 border-bottom grid-80 prefix-10 suffix-10 grid-parent">
+            <div class="mobile-grid-100 grid-parent">
+                <!-- Add New Email Block -->
+                <div ng-controller="EmailController" id="emailController" class="whitebox top-mar10 bottom-mar10">
+                    <form novalidate name="add_email_form" ng-submit="addEmail(email)">
+                        <div class="mobile-grid-100 grid-parent">
+                            <div class="messages result-error-value mobile-grid-100 tablet-grid-80 tablet-prefix-10 tablet-suffix-10 grid-80 prefix-10 suffix-10">
+                                <p id="emailUpdateMessage" ng-show="principalUpdateMessage" ng-bind-html="principalUpdateMessage" class="error"></p>
+                                <p id="emailUpdateInvalidMessage" ng-show="add_email_form.new_email.$error.email && add_email_form.new_email.$dirty" class="error">Invalid Email Address</p>
+                                <p id="emailErrorMessageDetail" ng-show="info" class="info">D'oh! Did you forget which email you used before? No worries, try another one or try entering a phone number. I'll be right here.</p>
+                            </div>
+                            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate">
+                                <input id="emailText" required type="email" name="new_email" ng-model="email.principal" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 form-control">
+                                <label for="new_email" translate>Email Address:</label>
+                            </div>
+                            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate">
+                                <input id="defaultEmailCheckbox" type='checkbox'
+                                    ng-model="email.isDefault" ng-checked="email.isDefault" 
+                                    name='default_email' id='default_email' 
+                                    ng-true-value="true" ng-false-value="false">
+                                <label for='default_email' class="showLabel">Make primary</label>
+                            </div>
+                        </div>
+                        <div class="mobile-grid-100 grid-parent">
+                            <p class="small">I need to know it's really you, so when you select "Add Email" I am going to send a secret code to the email above.</p>
+                            <input id="emailAddSubmitButton" type="submit" value="Add Email" ng-disabled="!add_email_form.$valid" class="btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5">
+                        </div>
+                    </form>
+                    <div ng-if="emailAdded == true" class="mobile-grid-100 grid-parent">
+                        <form ng-submit="verifyEmail(email)">
+                           <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate top-mar10">
+                                <input id="emailSecretCodeText" type="text" required ng-model="email.otp_secret" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 form-control" id="otp">
+                                <label for="otp">Enter Otp:</label>
+                            </div>
+                            <div class="mobile-grid-100 grid-parent">
+                                <input id="emailVerifySubmitButton" type="submit" value="Verify Email" class="btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5">
+                            </div>
+                        </form>
+                        <form ng-submit="resendEmailOtp()">
+                            <div class="mobile-grid-100 grid-parent top-pad20">
+                                <input id="emailResendOtpSubmitButton" type="submit" value="Pass it to me again" class="btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <!-- [END] Add New Email Block -->
+            </div>
+        </div>
+        <!-- email --> 
+
+        <!-- Phone section -->
+        <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 grid-parent border-bottom grid-80 prefix-10 suffix-10">
+            <div class="mobile-grid-100 grid-100 grid-parent">
+                <!-- Add New Phone Block -->
+                <div ng-controller="PhoneController" id="phoneController" class="mobile-grid-100 grid-parent relative whitebox top-mar10">
+                    <form name="add_phone_form" ng-submit="addPhone(phone)">
+                        <div class="mobile-grid-100 grid-parent">
+                            <div class="messages result-error-value mobile-grid-100 tablet-grid-80 tablet-prefix-10 tablet-suffix-10 grid-80 prefix-10 suffix-10">
+                                <p id="phoneUpdateMessage" ng-show="principalUpdateMessage" ng-bind-html="principalUpdateMessage" class="error"></p>
+                                <p id="phoneUpdateTooLongMessage" translate class="error" ng-show="add_phone_form.phone.$error.maxlength">Phone number is too long</p>
+                                <p id="phoneUpdateNumericMessage" translate class="error" ng-show="add_phone_form.phone.$error.pattern">Phone number must be numeric</p>
+                                <p id="phoneErrorMessageDetail" ng-show="info" class="info">D'oh! Did you forget which email you used before? No worries, try another one or try entering a phone number. I'll be right here.</p>
+                            </div>
+                            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate">
+                                <input id="phoneText" type="text" required ng-pattern="/^[0-9]+$/i" ng-maxlength="24" ng-model="phone.principal" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 form-control" name="phone" id="phone">
+                                <label for="phone" translate>Phone Number:</label>
+                                <div class="mobile-grid-80 tablet-grid-80 grid-50 grid-parent">
+                                    <input id="phoneSmsCheckbox" type='checkbox' ng-model="phone.sms" name="sms" id="sms">
+                                    <label for='sms' class="showLabel">SMS</label>
+                                </div>
+                                <div class="mobile-grid-80 tablet-grid-80 grid-50 grid-parent">
+                                    <input id="phoneIvrCheckbox" type='checkbox' ng-model="phone.ivr" name="ivr" id="ivr" ng-init="phone.ivr=true" disabled>
+                                    <label for='ivr' class="showLabel">IVR</label>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="mobile-grid-100 grid-parent">
+                            <p class="small">I need to know it's really you, so when you select "Add phone" I am going to send a secret code to the phone number above.</p>
+                            <input id="phoneAddSubmitButton" type="submit" value="Add Phone" class="btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5" ng-disabled="!add_phone_form.$valid">
+                        </div>
+                    </form>
+                    <div ng-if="phoneAdded == true">
+                        <form ng-submit="verifyPhone(phone)">
+                            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate top-mar10">
+                                <input id="phoneSecretCodeText" type="text" required ng-model="phone.otp_secret" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 form-control" id="otp2">
+                                <label for="otp">Enter Otp:</label>
+                            </div>
+                            <div class="mobile-grid-100 grid-parent top-pad10">
+                                <input id="phoneVerifySubmitButton" type="submit" value="Verify Phone" class="btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5">
+                            </div>
+                        </form>
+                        <form ng-submit="resendPhoneOtp()">
+                            <div class="mobile-grid-100 grid-parent top-pad20">
+                                <input id="phoneResendOtpSubmitButton" type="submit" value="Pass it to me again" class="btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+				<!-- [END] Add New Email Block -->
+            </div>
+        </div> 
+        <!-- phone -->  
+    </div>
+</div>
+<ng-include src="includes.footer"> </ng-include>

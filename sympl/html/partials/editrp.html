@@ -1,0 +1,203 @@
+<ng-include src="includes.header"> </ng-include>
+
+<div class="grid-container">
+    <div ng-if="!relyingParty" class="grid-100 center top-pad20">
+        <i id="loadingSpinner" class="fa fa-spinner fa-pulse" style="font-size: 10em"></i>
+    </div>
+
+    <div class="grid-50 prefix-5">
+        <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 grid-80 prefix-10 suffix-10">
+            <h1>Update Relying Party</h1>
+        </div>
+        <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 border-bottom grid-80 prefix-10 suffix-10">
+            <div class="mobile-grid-50 tablet-grid-50 grid-50 editable">
+                <div id="profileImage" ng-show="relyingParty.rp_logo_img_type">
+                    <img ng-src="data:image/{{relyingParty.rp_logo_img_type}};base64,{{relyingParty.rp_logo_img}}" height="175" width="175" class="circular">
+                </div>
+                <div id="blankImage" ng-show="!relyingParty.rp_logo_img_type">
+                    <img src="//placehold.it/175x175" height="175" width="175" class="circular">
+                </div>
+                <div id="openUploadImage" class="icon-edit" ng-click="uploadImageOpen = !uploadImageOpen"></div>
+                <a id="removeImageButton" ng-click="removeImage(relyingParty)" class="plane" ng-show="relyingParty.rp_logo_img_type">Remove Current Image</a>
+            </div>
+        </div>
+        <div class="mobile-grid-100 border-bottom grid-80 prefix-10 suffix-10" collapse="uploadImageOpen">
+            <form name="image_upload" class="top-pad20 whitebox">
+                <fieldset>
+                    <div class="mobile-grid-100 grid-parent">
+                        Profile Image:
+                        <input type="file" id="fileUpload" class="bottom-pad10 grid-parent grid-100" style="overflow: hidden" ngf-select ng-model="picFile" name="fileUpload" accept="image/*">
+                        <div ng-show="picFile != null">
+                            <div class="grid-parent grid-10">
+                                <i id="rotateLeftButton" class="glyphicon glyphicon-repeat" ng-click="rotateLeft()"></i>
+                            </div>
+                            <div class="grid-parent grid-10">
+                                <i id="rotateRightButton" class="glyphicon glyphicon-repeat reverse" ng-click="rotateRight()"></i>
+                            </div>
+                            <div class="grid-parent grid-100">
+                                <img-crop image="profileImage" class="cropArea" result-image="croppedProfileImage" result-image-size="175"></img-crop>
+                            </div>
+                        </div>
+                        <div ng-show="picFile != null" class="grid-parent mobile-grid-100 top-pad10 bottom-pad10">
+                            <img ng-src="{{croppedProfileImage}}" class="circular" />
+                        </div>
+                        <div class="mobile-grid-100 grid-parent top-pad10">
+                            <button id="submitImageButton" class="btn primary" ng-disabled="picFile == null" ng-click="uploadImage()">Submit</button>
+                        </div>
+                        <div class="grid-parent mobile-grid-100 top-pad10" ng-show="uploadProgress >= 0 && uploadProgress < 100">
+                            <div class="progress" ng-show="uploadProgress >= 0 && uploadProgress < 100">
+                                <div id="uploadProgressDiv" class="ng-binding" style="width:{{uploadProgress}}%" ng-bind="uploadProgress + '%'"></div>
+                            </div>
+                        </div>
+                        <div id="uploadSuccesfulDiv" class="grid-parent mobile-grid-100 top-pad10" ng-show="uploadResult != null">
+                            Upload successful
+                        </div>
+                    </div>
+                </fieldset>
+            </form>
+        </div>
+
+        <div class="profile grid-100 grid-parent top-pad20">
+            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 grid-parent tablet-grid-90 tablet-prefix-5 tablet-suffix-5 border-bottom grid-80 prefix-10 suffix-10">
+                <div class="mobile-grid-100 grid-100 grid-parent">
+                    <form name="add_rp_form">
+                        <div class="mobile-grid-100 grid-parent">
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 validate">
+                                <label for="compliancelevel" translate>Compliance Level: (required)</label>
+                                <select id="compliancelevelSelect" name="compliancelevel" ng-model="relyingParty.compliancelevel" class="mobile-grid-100 tablet-grid-100 grid-100 form-control">
+                                    <option value="none" selected>none</option>
+                                    <option value="FISMA">FISMA</option>
+                                    <option value="FICAM">FICAM</option>
+                                    <option value="Tscheme">Tscheme</option>
+                                </select>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 validate">
+                                <input id="address1Text" type="text" name="authType" ng-model="relyingParty.authType" class="mobile-grid-100 tablet-grid-100 grid-100 form-control">
+                                <label ng-class="{empty: !relyingParty.authType}" for="authType" translate>Authentication Type:</label>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 validate">
+                                <input id="proofingText" type="text" name="proofing" ng-model="relyingParty.proofing" class="mobile-grid-100 tablet-grid-100 grid-100 form-control">
+                                <label ng-class="{empty: !relyingParty.proofing}" for="proofing" translate>ID proofing and LOA information:</label>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 validate">
+                                <input id="tokenText" type="text" name="token" ng-model="relyingParty.token" class="mobile-grid-100 tablet-grid-100 grid-100 form-control">
+                                <label ng-class="{empty: !relyingParty.token}" for="token" translate>OTP, Hard and soft token:</label>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 validate">
+                                <textarea id="confNotesText" type="text" name="confNotes" ng-model="relyingParty.confNotes" class="mobile-grid-100 tablet-grid-100 grid-100 form-control"></textarea>
+                                <label ng-class="{empty: !relyingParty.confNotes}" for="confNotes" translate>Configuration notes or comments:</label>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 validate">
+                                <input id="redirectURLText" type="text" name="redirectURL" ng-model="relyingParty.redirectURL" class="mobile-grid-100 tablet-grid-100 grid-100 form-control">
+                                <label ng-class="{empty: !relyingParty.redirectURL}" for="redirectURL" translate>Redirect URL:</label>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 validate">
+                                <input id="metadataText" type="text" name="metadata" ng-model="relyingParty.metadata" class="mobile-grid-100 tablet-grid-100 grid-100 form-control">
+                                <label ng-class="{empty: !relyingParty.metadata}" for="metadata" translate>Metadata Exchange:</label>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 validate">
+                                <input id="oauthText" type="text" name="oauth" ng-model="relyingParty.oauth" class="mobile-grid-100 tablet-grid-100 grid-100 form-control">
+                                <label ng-class="{empty: !relyingParty.oauth}" for="oauth" translate>OAuth contract:</label>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 validate">
+                                <input id="address1Text" type="text" name="address1" ng-model="relyingParty.address1" class="mobile-grid-100 tablet-grid-100 grid-100 form-control">
+                                <label ng-class="{empty: !relyingParty.address1}" for="address1" translate>Address 1:</label>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 validate">
+                                <input id="address2Text" type="text" name="address2" ng-model="relyingParty.address2" class="mobile-grid-100 tablet-grid-100 grid-100 form-control">
+                                <label ng-class="{empty: !relyingParty.address2}" for="address2" translate>Address 2:</label>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 validate">
+                                <input id="cityText" type="text" name="city" ng-model="relyingParty.city" class="mobile-grid-100 tablet-grid-100 grid-100 form-control">
+                                <label ng-class="{empty: !relyingParty.city}" for="city" translate>City:</label>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 validate">
+                                <input id="contactpersonText" type="text" name="contactperson" ng-model="relyingParty.contactperson" class="mobile-grid-100 tablet-grid-100 grid-100 form-control">
+                                <label ng-class="{empty: !relyingParty.contactperson}" for="contactperson" translate>Contact Person:</label>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 validate">
+                                <input id="countrycdText" type="text" name="countrycd" ng-model="relyingParty.countrycd" class="mobile-grid-100 tablet-grid-100 grid-100 form-control">
+                                <label ng-class="{empty: !relyingParty.countrycd}" for="countrycd" translate>Country Code:</label>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 validate">
+                                <input id="loalevelText" required type="text" name="loalevel" ng-model="relyingParty.loalevel" class="mobile-grid-100 tablet-grid-100 grid-100 form-control">
+                                <label ng-class="{empty: !relyingParty.loalevel}" for="loalevel" translate>LOA Level: (required)</label>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 validate">
+                                <input id="phonenumberText" type="text" name="phonenumber" ng-model="relyingParty.phonenumber" class="mobile-grid-100 tablet-grid-100 grid-100 form-control">
+                                <label ng-class="{empty: !relyingParty.phonenumber}" for="phonenumber" translate>Phone Number:</label>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 validate">
+                                <input id="descriptionText" type="text" name="description" ng-model="relyingParty.description" class="mobile-grid-100 tablet-grid-100 grid-100 form-control">
+                                <label ng-class="{empty: !relyingParty.description}" for="description" translate>Description:</label>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 validate">
+                                <input id="emailaddressText" type="text" name="emailaddress" ng-model="relyingParty.emailaddress" class="mobile-grid-100 tablet-grid-100 grid-100 form-control">
+                                <label ng-class="{empty: !relyingParty.emailaddress}" for="emailaddress" translate>Email Address:</label>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 validate">
+                                <input id="nameText" required type="text" name="name" ng-model="relyingParty.name" class="mobile-grid-100 tablet-grid-100 grid-100 form-control">
+                                <label ng-class="{empty: !relyingParty.name}" for="name" translate>Name: (required)</label>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 validate">
+                                <input id="rpurlText" required type="text" name="rpurl" ng-model="relyingParty.rpurl" class="mobile-grid-100 tablet-grid-100 grid-100 form-control">
+                                <label ng-class="{empty: !relyingParty.rpurl}" for="rpurl" translate>Url: (required)</label>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 validate">
+                                <input id="statecdText" type="text" name="statecd" ng-model="relyingParty.statecd" class="mobile-grid-100 tablet-grid-100 grid-100 form-control">
+                                <label ng-class="{empty: !relyingParty.statecd}" for="statecd" translate>State Code:</label>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 validate">
+                                <input id="zipcdText" type="text" name="zipcd" ng-model="relyingParty.zipcd" class="mobile-grid-100 tablet-grid-100 grid-100 form-control">
+                                <label ng-class="{empty: !relyingParty.zipcd}" for="zipcd" translate>ZIP Code:</label>
+                            </div>
+                            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate">
+                                <input id="remember_device" type="checkbox" name="remember_device" ng-model="relyingParty.remember_device" class="form-control" ng-checked="relyingParty.remember_device" />
+                                <label for="remember_device" translate>Allow remember device</label>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 validate">
+                                <input id="primaryColorText" type="text" name="primaryColorText" ng-model="relyingParty.primary_color" class="mobile-grid-100 tablet-grid-100 grid-100 form-control">
+                                <label ng-class="{empty: !relyingParty.primary_color}" for="primaryColorText" translate>Primary Color:</label>
+                                <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent sampleBox" ng-style="{'background-color':relyingParty.primary_color}"></div>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 bottom-pad20">
+                                <input type="file" id="header_bg_img" class="bottom-pad10 grid-parent grid-100 inputfile" ngf-select ng-model="relyingParty.header_bg" name="header_bg_img" accept="image/*" inputfile>
+                                <label class="showLabel" for="header_bg_img"><i class="fa fa-upload"></i> Background Image</label>
+                                <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+                                    <canvas class="sampleCanvas" id="header_bg_img_canvas"></canvas>
+                                </div>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 validate">
+                                <input id="headerColorText" type="text" name="headerColorText" ng-model="relyingParty.header_color" class="mobile-grid-100 tablet-grid-100 grid-100 form-control">
+                                <label ng-class="{empty: !relyingParty.header_color}" for="headerColorText" translate>Header Background Color:</label>
+                                <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent sampleBox" ng-style="{'background-color':relyingParty.header_color}"></div>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100">
+                                <input type="file" id="header_logo_img" class="bottom-pad10 grid-parent grid-100 inputfile" ngf-select ng-model="relyingParty.header_logo" name="header_logo_img" accept="image/*" inputfile>
+                                <label class="showLabel" for="header_logo_img"><i class="fa fa-upload"></i>Logo Image</label>
+                                <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+                                    <canvas class="sampleCanvas" id="header_logo_img_canvas"></canvas>
+                                </div>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100">
+                                <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent"><a id="colorTestLink" ui-sref="Modal.colorTest" class="primary plain pull-right small" ng-click="setColorTest(relyingParty.primary_color, relyingParty.header_color)">Preview Branding</a></div>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100 validate">
+                                <input id="createRPButton" type="submit" ng-click="updateRelyingParty(relyingParty)" class="btn primary mobile-grid-100 tablet-grid-100 grid-100" value="Update RP" ng-disabled="add_rp_form.$invalid">
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100" ng-if="updateRPSuccessMessage">
+                                <p id="createRPSuccessMessage" >{{updateRPSuccessMessage}}</p>
+                            </div>
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100" ng-if="updateRPFailureMessage">
+                                <p id="createRPFailureMessage" >{{updateRPFailureMessage}}</p>
+                            </div>
+
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<ng-include src="includes.footer"> </ng-include>

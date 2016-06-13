@@ -1,0 +1,138 @@
+<ng-include src="includes.header"> </ng-include>
+<div class="grid-container">
+    <div>{{generalMessage}}</div>
+    <div id="eulaDiv" ng-repeat="eula in profile.eulas" collapse="eulaOpen">
+        <div ng-show="eula.showEula" class="fake-input">
+            {{eula.license.text}}
+        </div>
+    </div>
+    <div id="credentialDiv" data-ng-repeat="credential in profile.credentials" collapse="credentialOpen">
+        <div ng-show="credential.showCredential" class="fake-input">
+            {{credential.license.text}}
+        </div>
+    </div>
+    <div ng-hide="profileRendered && principalsRendered" class="grid-100 center top-pad20">
+        <i class="fa fa-spinner fa-pulse" style="font-size: 10em"></i>
+    </div>
+    <div ng-show="profileRendered && principalsRendered" class="grid-100">
+        <div class="grid-50 prefix-5">
+            <div class="grid-100 grid-parent">
+                <div class="grid-100 grid-parent top-pad20">
+                    <h1>Persona History</h1>
+                </div>
+            </div>
+            <div class="profile grid-100 grid-parent bottom-mar10" ng-show="allAPIDataLoaded">
+                <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 grid-parent tablet-grid-90 tablet-prefix-5 tablet-suffix-5 border-bottom grid-90 prefix-5 suffix-5">
+                    <div class="mobile-grid-50 tablet-grid-50 grid-50 editable">
+                        <div ng-show="personaHistory.image_type">
+                            <img ng-src="data:{{personaHistory.image_type}};base64,{{personaHistory.image}}" height="175" width="175" class="circular">
+                        </div>
+                        <div ng-show="!personaHistory.image_type">
+                            <img src="//placehold.it/175x175" height="175" width="175" class="circular">
+                        </div>
+                    </div>
+                    <div class="mobile-grid-50 tablet-grid-50 grid-50 top-pad20">
+                        <p class="top-mar20">persona</p>
+                        <p class="h1">{{personaHistory.label}}</p>
+                    </div>
+                </div>
+                <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 grid-parent tablet-grid-90 tablet-prefix-5 tablet-suffix-5 border-bottom grid-90 prefix-5 suffix-5">
+                    <div class="mobile-grid-100 grid-parent">
+                        <div class="mobile-grid-60 tablet-grid-60 grid-60 grid-parent">Failed Logins</div>
+                        <div class="mobile-grid-40 tablet-grid-40 grid-40 grid-parent">
+                            <i class="glyphicon glyphicon-chevron-down primary pull-right" style="margin-top: 4px"></i>
+                            <select id="failedLimitSelect" class="fakeDropdown primary pull-right">
+                              <option disabled selected style="display:none">View #</option>
+                              <option ng-click="failedLimit = 10" >View 10</option>
+                              <option ng-click="failedLimit = 9999" >View All</option>
+                            </select>                     
+                        </div><br />
+                    </div>
+                    <div id="failedLoginHistoryDiv" class="mobile-grid-100 grid-100 grid-parent" ng-repeat="history in personaHistory.history | filter:'failed' | limitTo:failedLimit">
+                        <div class="mobile-grid-33 tablet-grid-33 grid-35 border-right">{{history.niceCreatedDate}}</div>
+                        <div class="mobile-grid-33 tablet-grid-33 grid-25 border-right center">{{history.createdTime}}</div>
+                        <div class="mobile-grid-33 tablet-grid-33 grid-40 red">Failed Login Attempt</div>
+                    </div>
+                </div>
+                <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 grid-parent tablet-grid-90 tablet-prefix-5 tablet-suffix-5 border-bottom grid-90 prefix-5 suffix-5">
+                    <div class="mobile-grid-100 grid-parent">
+                        <div class="mobile-grid-60 tablet-grid-60 grid-60 grid-parent">Successful Logins</div>
+                        <div class="mobile-grid-40 tablet-grid-40 grid-40 grid-parent">
+                            <i class="glyphicon glyphicon-chevron-down primary pull-right" style="margin-top: 4px"></i>
+                            <select id="successLimitSelect" class="fakeDropdown primary pull-right">
+                              <option disabled selected style="display:none">View #</option>
+                              <option ng-click="successLimit = 10" >View 10</option>
+                              <option ng-click="successLimit = 9999" >View All</option>
+                            </select>                     
+                        </div><br />
+                    </div>
+                    <div id="successLoginHistoryDiv" class="mobile-grid-100 grid-100 grid-parent" ng-repeat="history in personaHistory.history | filter:'success' | limitTo:successLimit">
+                        <div class="mobile-grid-50 tablet-grid-50 grid-50 border-right">{{history.niceCreatedDate}}</div>
+                        <div class="mobile-grid-50 tablet-grid-50 grid-50 right">{{history.createdTime}}</div>
+                    </div>
+                </div>
+                <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 grid-parent tablet-grid-90 tablet-prefix-5 tablet-suffix-5 border-bottom grid-90 prefix-5 suffix-5" ng-show="!!userAction.length">
+                    <div class="mobile-grid-100 grid-parent">
+                        <div class="mobile-grid-60 tablet-grid-60 grid-60 grid-parent">Successful Edits</div>
+                        <div class="mobile-grid-40 tablet-grid-40 grid-40 grid-parent">
+                            <i class="glyphicon glyphicon-chevron-down primary pull-right" style="margin-top: 4px"></i>
+                            <select id="editedLimitSelect" class="fakeDropdown primary pull-right">
+                              <option disabled selected style="display:none">View #</option>
+                              <option ng-click="editedLimit = 10" >View 10</option>
+                              <option ng-click="editedLimit = 9999" >View All</option>
+                            </select>                     
+                        </div><br />
+                    </div>
+                    <div id="editHistoryDiv" class="mobile-grid-100 grid-100 grid-parent" ng-repeat="items in userAction | limitTo:editedLimit">
+                        <div class="mobile-grid-50 tablet-grid-50 grid-50 border-right">{{items.niceCreatedDate}}</div>
+                        <div class="mobile-grid-50 tablet-grid-50 grid-50 right">{{items.createdTime}}</div>
+                    </div>
+                </div>
+            </div>
+            <div class="grey top-mar10" ng-show="personaHistoryHolder">{{personaHistory}}</div>
+        </div>
+        <div class="grid-35 suffix-5">
+            <div class="mobile-grid-100 grid-parent top-pad20">
+                <div class="grid-100 grid-parent">
+                    <h1>Login History</h1>
+                </div>
+            </div>
+            <div id="corePersonaHistoryDiv" class="grid-100 grid-parent">
+                <div class="profile grid-100 grid-parent top-pad20 bottom-pad20 bottom-mar15 overflow-hidden" ng-click="getPersonaHistory('28cff84d-c15c-4fde-99b7-67f8d18635a3')">
+                    <div class="corner-ribbon top-right">New</div>
+                    <div class="mobile-grid-100 grid-100">
+                        <div class="mobile-grid-35 tablet-grid-35 grid-35">
+                            <img src="//placehold.it/100x100" class="circular">
+                        </div>
+                        <div class="mobile-grid-65 tablet-grid-65 grid-65">
+                            <h3 class="top-mar0">Core</h3>
+                            <p class="grid-70 grid-parent">
+                                <span class="small grid-100 grid-parent">Created: {{createDate}} @ {{createTime}}</span>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div id="rpPersonaHistoryDiv" class="grid-100 mobile-100 tablet-100 grid-parent">
+    	        <div data-ng-repeat="item in userHistory" class="grid-100 grid-parent">
+    	        	<div class="profile grid-100 grid-parent top-pad20 bottom-pad20 bottom-mar15 overflow-hidden" ng-click="getPersonaHistory(item.rp_uuid)">
+    	            	<div class="corner-ribbon top-right">New</div>
+    	               	<div class="mobile-grid-100 grid-100">
+    	       	            <div class="mobile-grid-35 tablet-grid-35 grid-35">
+    	       	                <img src="//placehold.it/100x100" class="circular">
+    	       	            </div>
+    	       	            <div class="mobile-grid-65 tablet-grid-65 grid-65">
+    	       	                <h3 class="top-mar0">{{item.persona_label}}</h3>
+    	       	                <p class="grid-100 grid-parent">
+                                    <span class="small grid-100 grid-parent">Created: {{item.nicePersonaCreatedDate}} @ {{item.persona_createdTime}}</span>
+    	       	                    <span class="small grid-100 grid-parent">Last login: {{item.niceCreatedDate}} @ {{item.createdTime}}</span>
+    	       	                </p>
+    	       	            </div>
+    	       	        </div>
+    	        	</div>
+    	        </div>
+        	</div>
+        </div>
+    </div>
+</div>
+<ng-include src="includes.footer"> </ng-include>
