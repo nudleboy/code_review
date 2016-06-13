@@ -1,0 +1,65 @@
+<!doctype html>
+<html lang="en" ng-app="sponsoredAuthenticationApp">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Zentry</title>
+
+
+    <link rel="stylesheet" type="text/css" href="{{APP_ROOT}}/applications/authentication/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="{{APP_ROOT}}/applications/authentication/css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" type="text/css" href="{{APP_ROOT}}/applications/authentication/css/jquery-ui-1.10.4.min.css" />
+    <link rel="stylesheet" type="text/css" href="{{APP_ROOT}}/applications/authentication/css/unsemantic-grid-desktop-no-ie7.css" />
+    <link rel="stylesheet" type="text/css" href="{{APP_ROOT}}/applications/authentication/css/sympl.css" />
+</head>
+<body>
+    <div class="view-container">
+        <div ng-view data-autoscroll ng-cloak></div>
+    </div>
+    
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/jquery-1.11.1.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/jquery-ui-1.10.4.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/angular.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/angular-route.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/angular-resource.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/angular-cookies.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/ui-bootstrap.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/modernizr.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/bootstrapValidator.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/angular-ui-router.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/angular-gettext.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/angular-ui-router.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/socket.io/0.9.16/socket.io.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/require-2.1.15.min.js"></script>
+    <script src="//angular-ui.github.io/bootstrap/ui-bootstrap-tpls-0.10.0.js"></script>
+
+    <script src="{{APP_ROOT}}/applications/authentication/js/services.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/directives.js"></script>
+
+    <script src="{{APP_ROOT}}/applications/sponsoredAuthentication/js/app.js"></script>
+    <script src="{{APP_ROOT}}/applications/sponsoredAuthentication/js/services.js"></script>
+    <script src="{{APP_ROOT}}/applications/sponsoredAuthentication/js/controllers/controller.js"></script>
+    <script src="{{APP_ROOT}}/applications/sponsoredAuthentication/js/controllers/lostPasswordController.js"></script>
+    <script src="{{APP_ROOT}}/applications/sponsoredAuthentication/js/controllers/authenticationController.js"></script>
+    <script src="{{APP_ROOT}}/applications/sponsoredAuthentication/js/controllers/registrationController.js"></script>
+    <script src="{{APP_ROOT}}/applications/sponsoredAuthentication/js/controllers/credentialController.js"></script>
+    <script src="{{APP_ROOT}}/applications/sponsoredAuthentication/js/controllers/principalSelectionController.js"></script>
+    <script src="{{APP_ROOT}}/applications/sponsoredAuthentication/js/controllers/personaController.js"></script>
+    <script src="{{APP_ROOT}}/applications/sponsoredAuthentication/js/controllers/errorController.js"></script>
+    <script src="{{APP_ROOT}}/applications/sponsoredAuthentication/js/controllers/setPinController.js"></script>
+    <script src="{{APP_ROOT}}/applications/sponsoredAuthentication/js/controllers/oauthErrorController.js"></script>
+
+    <script type="text/javascript">
+        RPID = '{{RPID}}';
+        APP_ROOT = '{{APP_ROOT}}';
+		BOOM_URL = '{{BOOM_URL}}';
+        API_CONTEXT = '{{API_CONTEXT}}';
+        AUTHN_TYPE = '{{AUTHN_TYPE}}';
+        
+
+        RP_POST_URL = '{{ relyingPartyPostURL }}';
+        ENCODED_RESPONSE = '{{ encodedResponse }}';
+        
+    </script>
+</body>
+</html>

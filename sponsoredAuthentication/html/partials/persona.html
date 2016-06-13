@@ -1,0 +1,83 @@
+<ng-include src="includes.header"> </ng-include>
+<div class="grid-container">
+	<div class="mobile-grid-100 grid-parent">
+		<div class="mobile-grid-100 tablet-grid-60 tablet-suffix-20 tablet-prefix-20 grid-40 prefix-30 suffix-30 center" ng-hide="allAPIDataLoaded">
+		    <i class="fa fa-spinner fa-pulse" style="font-size: 10em" id="loadingSpinner"></i>
+		</div>
+		<div class="mobile-grid-100 tablet-grid-60 tablet-suffix-20 tablet-prefix-20 grid-60 prefix-20 suffix-20 whitebox" ng-show="allAPIDataLoaded">
+			<div class="grid-100">
+				<div class="mobile-grid-100 grid-parent">
+					<div class="mobile-grid-100 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 grid-100">
+						<h1 class="center grey">{{personaTemplate.persona_label}}</h1>
+		        		<p translate class="small grey mobile-grid-100 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 grid-100">Let's tell {{RPName}} who you are, so you can be on your way.</p>
+		        	</div>
+	    		</div>
+				<div class="mobile-grid-100 grid-parent">
+		            <div class="mobile-grid-100 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 grid-100 top-pad20">
+					    <input type="button" id="logoutButton" ng-click="logout()" class="btn primary mobile-grid-100 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 grid-90 prefix-5 suffix-5" value="No thanks">
+					</div>
+					<form name="personaForm" id="personaForm" ng-submit="submitPersona(personaTemplate)" novalidate class="grid-parent top-pad40">
+						<div class="mobile-grid-100 grid-90 prefix-5 suffix-5 grid-parent">
+							<div class="mobile-grid-100 grid-parent bottom-pad20" data-ng-show="showPersonaList">
+								<div class="mobile-grid-100 tablet-grid-80 tablet-prefix-10 tablet-suffix-10 grid-parent">
+									<p translate class="small grey mobile-grid-100 tablet-grid-70 grid-70">
+										Pick a persona to use to copy information from:
+									</p>
+									<div class="mobile-grid-100 tablet-grid-30 grid-30">
+										<select ng-model="personaList" name="personaChooser" id="personaChoiceList" ng-change="personaSelectChange(personaList)" class="grid-100"></select>
+									</div>
+								</div>
+							</div>
+							<div id="personaAttributeDiv" data-ng-repeat="attribute in personaTemplate.attributes" class="mobile-grid-100 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 grid-100 whitebox">
+								<div class="mobile-grid-100 tablet-grid-90 tablet-prefix-5 tablet-suffix-5">
+									<span ng-if="attribute.hidden == true">
+										<input type="hidden" id="{{attribute.field_name}}" name="{{attribute.field_name}}">
+									</span>
+									<span ng-if="attribute.hidden == false">
+<!-- 										<span ng-if="attribute.data_type != 'bool'">
+				   							
+				   						</span> -->
+									    <span ng-switch on="attribute.data_type">
+									    	
+									    		<input type="text" id="{{attribute.field_name}}" name="{{attribute.field_name}}" ng-switch-when="str"
+									    		       ng-model="attribute.value" ng-required="{{attribute.required}}"
+									    		       
+									    		       class="mobile-grid-100 tablet-grid-100 grid-100 form-control pad-top10" />
+									    		<input type="number" id="{{attribute.field_name}}" name="{{attribute.field_name}}" ng-switch-when="int"
+									    		       min="{{attribute.extraprops.min_value}}" max="{{attribute.extraprops.max_value}}"
+									    		       ng-model="attribute.value" ng-required="{{attribute.required}}"
+									    		       
+									    		       class="mobile-grid-100 tablet-grid-100 grid-100 form-control" />
+									    		<input type="checkbox" id="{{attribute.field_name}}" name="{{attribute.field_name}}" ng-switch-when="bool"
+									    		       ng-model="attribute.value" ng-required="{{attribute.required}}"
+									    		       ng-true-value="true" ng-false-value="false" 
+									    		       class="mobile-grid-100 tablet-grid-100 grid-100 form-control" />
+									    		<!-- <label for="{{attribute.field_label}}" id="{{attribute.field_name}}">{{attribute.field_label}}</label> -->
+									    		<input type="text" id="{{attribute.field_name}}" name="{{attribute.field_name}}" ng-switch-when="float"
+									    		       ng-model="attribute.value" ng-required="{{attribute.required}}"
+									    		       class="mobile-grid-100 tablet-grid-100 grid-100 form-control" />
+									    		<input type="date" id="{{attribute.field_name}}" name="{{attribute.field_name}}" ng-switch-when="date"
+									    		       ng-model="attribute.value" ng-required="{{attribute.required}}"
+									    		       class="mobile-grid-100 tablet-grid-100 grid-100 form-control" />
+									    		<label ng-class="{empty: !attribute.field_name}" for="{{attribute.field_name}}" translate>{{attribute.field_label}}</label>
+								    	</span>
+							    	</span>
+							    </div>
+							</div>
+						</div>
+						<div class="mobile-grid-100 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 grid-100">
+							<input type="submit" class="btn primary mobile-grid-100 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 grid-90 prefix-5 suffix-5" value="Let's Go!" id="submitButton" ng-disabled="(personaForm.$valid&&createPersonaBtn) ?  false : true">
+						</div>
+					</form>
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div style="height: 1px; width: 1px">
+		<form id="saml_form" action="/" method="POST" enctype="application/x-www-form-urlencoded">
+			<input type="hidden" id="SAMLResponse" name="SAMLResponse" />
+		</form>
+	</div>
+</div>
+<ng-include src="includes.footer"> </ng-include>

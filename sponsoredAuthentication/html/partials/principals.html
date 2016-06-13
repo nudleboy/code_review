@@ -1,0 +1,75 @@
+<ng-include src="includes.header"> </ng-include>
+<div class="grid-container">
+	<div ng-show="displayMessage" class="mobile-grid-100 grid-parent">
+		<div class="col-sm-5 col-sm-offset-3">
+			<div class="row" >
+				<div class="col-md-4">
+					There are no second form factors available - add another form factor other than email and try again.
+				</div>
+			</div>
+		</div>
+	</div>
+
+	<div ng-show="displayPrincipals" class="mobile-grid-100 grid-parent">
+		<form ng-submit="sendOtp()" name="sendOTPForm">
+			<div class="mobile-grid-100 tablet-grid-60 tablet-suffix-20 tablet-prefix-20 grid-40 prefix-30 suffix-30 whitebox">
+				<div class="grid-100">
+					<div class="mobile-grid-100 grid-parent">
+						<div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+							<h1 class="center grey">One-Time Password</h1>
+			        		<p translate class="small grey mobile-grid-100 tablet-grid-100 grid-100">Where would you like us to send your	one-time password?</p>
+			        	</div>
+		    		</div>
+					<div class="mobile-grid-100 grid-parent">
+			            <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent info">
+			            	<div id="principalDiv" class="mobile-grid-100 tablet-grid-100 grid-100">
+				                <div ng-repeat="principal in principals" class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+									<div ng-repeat="method in principal.method" class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+										<input id="{{principal.name}}{{method}}" type="radio" ng-model="focusedPrincipal.name" name="otp.principal" value="{{principal.name}}{{method}}" ng-change="setOtp(principal, method)" ng-required="!focusedPrincipal.name">
+										<label for="{{principal.name}}{{method}}" class="border-bottom">
+										    {{principal.name}} ({{method}})
+										</label>
+									</div>
+								</div>
+							</div>
+						    <div class="mobile-grid-100 tablet-grid-100 grid-100top-pad20">
+								<input type="submit" id="sendOtpButton" class="btn primary mobile-grid-100 tablet-grid-100 grid-100" ng-disabled="(sendOTPForm.$valid&&sendOtpButtonEnabled) ?  false : true" value="Send OTP" />
+						    </div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</form>
+	</div>
+
+	<div ng-show="displayVerificationInput">
+		<form ng-submit="verifyOtp(otp)" name="otpForm">
+			<div class="mobile-grid-100 tablet-grid-60 tablet-suffix-20 tablet-prefix-20 grid-40 prefix-30 suffix-30 whitebox">
+		        <div class="grid-100">
+		            <div class="mobile-grid-100 grid-parent">
+		                <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+		                    <h1 class="center grey">Type in Secret Code</h1>
+		                    <p class="small grey mobile-grid-100 tablet-grid-100 grid-100"><span class="primary">Tell me a secret...</span><br />I need to know it's really you, so type in the secret code I sent to <span class="primary">{{selectedPrincipalFriendlyName}}</span>.</p>
+		                </div>
+		            </div>
+		            <div class="mobile-grid-100 grid-parent top-pad10">
+		                <div class="result-error-value mobile-grid-100 tablet-grid-80 tablet-prefix-10 tablet-suffix-10 grid-90 prefix-5 suffix-5">
+		                    <p id="errorMessage" ng-bind="messages" ng-show="messages" class="error"></p>
+		                </div>
+		                <div class="mobile-grid-100 tablet-grid-100 grid-100">
+		                    <input type="text" id="enterOtpText" name="enter_otp" required numbersonly minlength="6" maxlength="6" size="6" class="mobile-grid-100 tablet-grid-100 grid-100 form-control" ng-model="otp.otp_secret" >
+		                    <label for="enter_otp" translate>Enter OTP:</label>
+		                </div>
+		                <div class="mobile-grid-100 tablet-grid-100 grid-100">
+		                    <input type="submit" id="findPrincipalsButton" class="btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-100 grid-100" ng-disabled="otpForm.$invalid" value="Let's Go!" />
+		                </div>
+		            </div>
+		        </div>
+		    </div>
+		    <div class="mobile-grid-100 tablet-grid-60 tablet-suffix-20 tablet-prefix-20 grid-40 prefix-30 suffix-30 top-pad10">
+		        <a id="resendOtpLink" href="javascript:void(0)" ng-click="resendOtp()" class="pull-right small plain primary">Oops, I don't see the secret! Pass it to me again</a>
+		    </div>
+		</form>
+	</div>
+</div>
+<ng-include src="includes.footer"> </ng-include>
