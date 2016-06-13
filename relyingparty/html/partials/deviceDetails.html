@@ -1,0 +1,62 @@
+<header>
+    <a href="/" id="logoHeaderLink"></a>
+    <nav>
+        <a href="#" id="menu-icon"></a>
+        <ul>
+            <li>
+                <span ng-click="logout()">Logout</span>
+            </li>
+            <li>
+                <span ng-click="manageRelyingParty()">Manage Relying Party</span>
+            </li>
+        </ul>
+    </nav>
+</header>
+
+<div class="container">
+	<div class="row">
+        <div class="col-md-2">
+            &nbsp;
+        </div>
+    </div>
+
+    <div class="row">
+        <div class="col-md-4">
+            <h3>View Device Information</h3>
+        </div>
+    </div>
+    
+    <form novalidate name="dates_form" ng-submit="getDeviceDetails(dateFields)">
+	    <div class="row">
+	    	<div class="col-md-2">
+	    		<label for="beg_date">Begin Date (yyyy-mm-dd)</label>
+	    		<input ng-model="dateFields.beg_date" type="text" id="beg_date" name="beg_date" ng-pattern="/^[0-9-]+$/i" ng-maxlength="10" class="form-control stretch-input" placeholder="Begin Date (YYYY-MM-DD)">
+	    		<div translate class="error" ng-show="dates_form.beg_date.$error.maxlength">
+                    The begin date is too long
+                </div>
+                <div translate class="error" ng-show="profile_form.beg_date.$error.pattern">
+                    The begin date must be numeric
+                </div>
+	    	</div>
+	    	<div class="col-md-2">
+	    		<label for="end_date">End Date (yyyy-mm-dd)</label>
+	    		<input ng-model="dateFields.end_date" type="text" id="end_date" name="end_date" ng-pattern="/^[0-9-]+$/i" ng-maxlength="10" class="form-control stretch-input" placeholder="End Date (YYYY-MM-DD)">
+	    		<div translate class="error" ng-show="dates_form.end_date.$error.maxlength">
+                    The end date is too long
+                </div>
+                <div translate class="error" ng-show="profile_form.end_date.$error.pattern">
+                    The end date must be numeric
+                </div>
+	    	</div>
+	    	<div class="col-md-2">
+	    		<input type="submit" class="btn primary btn-caret-right pull-right" value="Query">
+	    	</div>
+	    </div>
+    </form>
+    
+    <table id="detailsTable" style="visibility: hidden; font-size: 10px; margin-left: -100px" border="1px">
+   		
+   		
+   	</table>
+
+</div>

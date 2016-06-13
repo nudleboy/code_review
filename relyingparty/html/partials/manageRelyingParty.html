@@ -1,0 +1,196 @@
+<header>
+    <a href="{{APP_ROOT}}" id="logoHeaderLink"></a>
+    <nav>
+        <a href="#" id="menu-icon"></a>
+        <ul>
+            <li>
+                <span ng-click="logout()">Logout</span>
+            </li>
+            <li>
+                <span ng-click="getDeviceInformation()">Device Information</span>
+            </li>
+        </ul>
+    </nav>
+</header>
+<div class="grid-50 prefix-5">
+    <div class="mobile-grid-100 grid-parent top-pad20">
+        <div class="grid-100 grid-parent">
+            <h1>Manage Relying Parties</h1>
+            <p>Add a new relying party, or enter an existing rpid and click Update RP to update an existing relying party.</p>
+            <!-- <input type="button" class="btn primary btn-caret-right pull-right" value="Create RP" ng-click="displayCreateRp()"> -->
+        </div>
+    </div>
+    <div class="profile grid-100 grid-parent top-pad20">
+        <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 border-bottom grid-80 prefix-10 suffix-10 grid-parent">
+            <div class="mobile-grid-100 grid-parent">
+                <div class="mobile-grid-60 tablet-grid-60 grid-60 grid-parent">Relying Parties</div>
+                <div class="mobile-grid-40 tablet-grid-40 grid-40 grid-parent" ng-click="displayCreateRp()" title="add RP" >
+                    <span class="icon-add"></span>
+                </div><br />
+                <div class="grid-100 grid-parent">
+                    <div class="grid-100 grid-parent">
+                        <form ng-submit="getRp(rpid)">                   
+                            <div class="mobile-grid-60 tablet-grid-60 grid-60 top-mar10">
+                                <input required placeholder="Existing RPID" type="text" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 form-control" ng-model="rpid">
+                            </div>
+                            <div class="btn-group mobile-grid-40 tablet-grid-40 grid-40 top-mar10">
+                                <input type="submit" class="btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5" value="Update RP">
+                            </div>
+                        </form>
+                    </div>
+                </div>
+                <div ng-show="state == 'displayCreateRp' || state == 'updateRelyingParty'" class="whitebox top-mar10 bottom-mar10">
+                    <form name="add_rp_form">
+                        <div class="mobile-grid-100 grid-parent">
+                            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate">
+                                <h4>{{relyingParty.rp_uuid}}</h4>
+                            </div>
+                            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate bot-mar10">
+                                <label for="compliancelevel" translate>Compliance Level:</label>
+                                <select name="compliancelevel" ng-model="relyingParty.compliancelevel" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 form-control" required>
+                                    <option value="none" selected>none</option>
+                                    <option value="FISMA">FISMA</option>
+                                    <option value="FICAM">FICAM</option>
+                                    <option value="Tscheme">Tscheme</option>
+                                </select>
+                            </div>
+                            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate">
+                                <label for="address1" translate>Address 1:</label>
+                                <input type="text" name="address1" placeholder="Address 1" ng-model="relyingParty.address1" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 form-control">
+                            </div>
+                            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate">
+                                <label for="address2" translate>Address 2:</label>
+                                <input type="text" name="address2" placeholder="Address 2" ng-model="relyingParty.address2" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 form-control">
+                            </div>
+                            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate">
+                                <label for="city" translate>City:</label>
+                                <input type="text" name="city" placeholder="City" ng-model="relyingParty.city" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 form-control">
+                            </div>
+                            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate">
+                                <label for="contactperson" translate>Contact Person:</label>
+                                <input type="text" name="contactperson" placeholder="Contact Person" ng-model="relyingParty.contactperson" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 form-control">
+                            </div>
+                            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate">
+                                <label for="countrycd" translate>Country Code:</label>
+                                <input type="text" name="countrycd" placeholder="Country Code" ng-model="relyingParty.countrycd" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 form-control">
+                            </div>
+                            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate">
+                                <label for="iframeoptions" translate>Iframe Options:</label>
+                                <input type="text" name="iframeoptions" placeholder="Iframe Options" ng-model="relyingParty.iframeoptions" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 form-control"> 
+                            </div>
+                            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate">
+                                <label for="loalevel" translate>LOA Level:</label>
+                                <div class="placeholderStar"><i class="fa fa-asterisk"></i></div>
+                                <input required type="text" name="loalevel" placeholder="LOA Level" ng-model="relyingParty.loalevel" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 form-control">
+                            </div>
+                            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate">
+                                <label for="phonenumber" translate>Phone Number:</label>
+                                <input type="text" name="phonenumber" placeholder="Phone Number" ng-model="relyingParty.phonenumber" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 form-control">
+                            </div>
+                            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate">
+                                <label for="description" translate>Description:</label>
+                                <input type="text" name="description" placeholder="City" ng-model="relyingParty.description" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 form-control">
+                            </div>
+                            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate">
+                                <label for="emailaddress" translate>Email Address:</label>
+                                <input type="text" name="emailaddress" placeholder="Contact Person" ng-model="relyingParty.emailaddress" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 form-control">
+                            </div>
+                            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate">
+                                <label for="name" translate>Name:</label>
+                                <div class="placeholderStar"><i class="fa fa-asterisk"></i></div>
+                                <input required type="text" name="name" placeholder="Name" ng-model="relyingParty.name" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 form-control">
+                            </div>
+                            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate">
+                                <label for="rpurl" translate>Url:</label>
+                                <div class="placeholderStar"><i class="fa fa-asterisk"></i></div>
+                                <input required type="text" name="rpurl" placeholder="URL" ng-model="relyingParty.rpurl" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 form-control">
+                            </div>
+                            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate">
+                                <label for="statecd" translate>State Code:</label>
+                                <input type="text" name="statecd" placeholder="State Code" ng-model="relyingParty.statecd" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 form-control">
+                            </div>
+                            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate">
+                                <label for="zipcd" translate>ZIP Code:</label>
+                                <input type="text" name="zipcd" placeholder="ZIP Code" ng-model="relyingParty.zipcd" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 form-control">
+                            </div>
+                            <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate">
+                            <input id="remember_device" type="checkbox" name="remember_device" ng-model="relyingParty.remember_device" class="form-control" />
+                            <label for="remember_device" translate>Allow remember device</label>
+                        </div>
+
+                            <div class="mobile-grid-100 tablet-grid-100 grid-100">
+                                <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">Primary Color</div>
+                                <div class="mobile-grid-80 tablet-grid-80 grid-80 grid-parent">
+                            <!--         <div class="mobile-grid-30 tablet-grid-30 grid-30 grid-parent">
+                                        <input type="color" ng-model="primaryColor" class="mobile-grid-100 tablet-grid-100 grid-95" value="primaryColor">
+                                    </div> -->
+                                    <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+                                        <input name="primaryColor" type="text" ng-model="relyingParty.primary_color" class="mobile-grid-100 tablet-grid-100 grid-95" value="relyingParty.primary_color" placeholder="hex value ex: #ff0000" minlength="7" maxlength="7" size="7">
+                                    </div>
+                                </div>
+                                <div class="mobile-grid-20 tablet-grid-20 grid-20 grid-parent">
+                                    <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent sampleBox" ng-style="{'background-color':relyingParty.primary_color}"></div>
+                                </div>
+                                <!-- <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">Upload Background Image</div> -->
+                                <div class="mobile-grid-80 tablet-grid-80 grid-80 grid-parent">
+                                    <input type="file" id="backgroundImageUpload" class="bottom-pad10 grid-parent grid-100 inputfile" ngf-select ng-model="relyingParty.header_bg_img" name="backgroundImageUpload" accept="image/*" inputfile>
+                                    <label class="showLabel" for="backgroundImageUpload"><i class="fa fa-upload"></i> Background Image</label>
+                                </div>
+                                <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">Header Background Color</div>
+                                <div class="mobile-grid-80 tablet-grid-80 grid-80 grid-parent">
+                            <!--         <div class="mobile-grid-30 tablet-grid-30 grid-30 grid-parent">
+                                        <input type="color" ng-model="backgroundColor" class="mobile-grid-100 tablet-grid-100 grid-95">
+                                    </div> -->
+                                    <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">
+                                        <input type="text" ng-model="relyingParty.header_color" class="mobile-grid-100 tablet-grid-100 grid-95" value="relyingParty.header_color" placeholder="hex value ex: #ff0000" minlength="7" maxlength="7" size="7">
+                                    </div>
+                                </div>
+                                <div class="mobile-grid-20 tablet-grid-20 grid-20 grid-parent">
+                                    <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent sampleBox" ng-style="{'background-color':relyingParty.header_color}"></div>
+                                </div>
+                                <!-- <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent">Upload Logo Image</div> -->
+                                <div class="mobile-grid-80 tablet-grid-80 grid-80 grid-parent">
+                                    <input type="file" id="logoUpload" class="bottom-pad10 grid-parent grid-100 inputfile" ngf-select ng-model="relyingParty.rp_logo_img" name="logoUpload" accept="image/*" inputfile>
+                                    <label class="showLabel" for="logoUpload"><i class="fa fa-upload"></i> Logo Image</label>
+                                </div>
+                                <div class="mobile-grid-100 tablet-grid-100 grid-100 grid-parent"><a id="colorTestLink" ui-sref="Modal.colorTest" class="primary plain pull-right small" ng-click="setColorTest(relyingParty.primary_color, relyingParty.header_color)">Preview Branding</a></div>
+                            </div>
+    
+
+
+                            <div ng-show="state == 'updateRelyingParty'" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5">
+                                <input type="button" ng-click="deleteRp(relyingParty)" class="btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5 grid-40 prefix-5 suffix-5" value="Delete">
+                                <input type="button" ng-click="updateRp(relyingParty)" class="btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5 grid-40 prefix-5 suffix-5" value="Update">
+                            </div>
+                            <div ng-show="state == 'displayCreateRp'" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5">
+                                <input type="submit" ng-click="createRp(relyingParty)" class="btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5" value="Create RP" ng-disabled="add_rp_form.$invalid">
+                            </div>
+                            <div ng-show="state == 'updateRelyingParty'">
+                                <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate">
+                                    <label for="clientId" translate>clientId:</label>
+                                    <input type="text" name="clientId" placeholder="clientId" ng-model="relyingParty.clientId" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 form-control">
+                                </div>
+                                <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate">
+                                    <label for="secret" translate>Secret:</label>
+                                    <input type="text" name="secret" placeholder="Secret" ng-model="relyingParty.secret" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 form-control">
+                                </div>
+                                <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate">
+                                    <label for="scope" translate>Scope:</label>
+                                    <input type="text" name="scope" placeholder="Scope" ng-model="relyingParty.scope" ng-focus="addScopeField(scope.field)" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 form-control">
+                                </div>
+                                <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 validate">
+                                    <label for="redirectUri" translate>Redirect URI:</label>
+                                    <input type="text" name="redirectUri" placeholder="Redirect URI" ng-model="relyingParty.redirectUri" class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 form-control">
+                                </div>
+                                <div class="mobile-grid-90 mobile-prefix-5 mobile-suffix-5 tablet-grid-90 tablet-prefix-5 tablet-suffix-5 grid-90 prefix-5 suffix-5">
+                                    <input type="submit" ng-click="createOauthContract(oauthContract)" class="btn primary mobile-grid-90 mobile-prefix-5 mobile-suffix-5" value="Create Oauth Contract">
+                                </div>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div ui-view="modal" autoscroll="false"></div>

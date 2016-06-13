@@ -1,0 +1,49 @@
+<!doctype html>
+<html lang="en" ng-app="authenticationApp">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Zentry - RP Login</title>
+
+
+    <link rel="stylesheet" type="text/css" href="{{APP_ROOT}}/applications/authentication/css/bootstrap.min.css" />
+    <link rel="stylesheet" type="text/css" href="{{APP_ROOT}}/applications/authentication/css/bootstrap-theme.min.css" />
+    <link rel="stylesheet" type="text/css" href="{{APP_ROOT}}/applications/authentication/css/jquery-ui-1.10.4.min.css" />
+    <link rel="stylesheet" type="text/css" href="{{APP_ROOT}}/applications/authentication/css/unsemantic-grid-desktop-no-ie7.css" />
+    <link rel="stylesheet" type="text/css" href="{{APP_ROOT}}/applications/authentication/css/sympl.css" />
+</head>
+<body>
+    <div class="view-container grid-container">
+        <div ng-view data-autoscroll class="view-frame grid-100 grid-parent" ng-cloak></div>
+    </div>
+
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/jquery-1.11.1.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/jquery-ui-1.10.4.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/angular.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/angular-route.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/angular-resource.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/angular-cookies.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/ui-bootstrap.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/modernizr.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/angular-gettext.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/angular-ui-router.min.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/lib/require-2.1.15.min.js"></script>
+    
+    <script src="{{APP_ROOT}}/applications/authentication/js/services.js"></script>
+    <script src="{{APP_ROOT}}/applications/relyingparty/js/app.js"></script>
+    <script src="{{APP_ROOT}}/applications/authentication/js/directives.js"></script>
+    <script src="{{APP_ROOT}}/applications/relyingparty/js/controllers/controller.js"></script>
+    <script src="{{APP_ROOT}}/applications/relyingparty/js/controllers/manageRpController.js"></script>
+    <script src="{{APP_ROOT}}/applications/relyingparty/js/controllers/deviceDetailsController.js"></script>
+    <script src="{{APP_ROOT}}/applications/relyingparty/js/services.js"></script>
+    
+    <script type="text/javascript">
+        APP_ROOT = '{{APP_ROOT}}';
+		BOOM_URL = '{{BOOM_URL}}';
+        API_CONTEXT = '{{API_CONTEXT}}';
+        API_KEY = '{{API_KEY}}';
+    </script>
+</body>
+</html>
+
+
